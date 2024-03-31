@@ -1,4 +1,5 @@
-﻿using api.Models;
+﻿using api.DataTransferObjects.UserDtos;
+using api.Models;
 using AutoMapper;
 
 namespace api.DataTransferObjects
@@ -6,8 +7,11 @@ namespace api.DataTransferObjects
     public class MappingProfile : Profile
     {
         public MappingProfile() {
-        CreateMap<Post, PostDto>()
-         .ForMember(p => p.Username, opt => opt.MapFrom(p => p.User.Username));
+            CreateMap<Post, PostDto>()
+             .ForMember(dest => dest.UserName, opt => opt.MapFrom(src => src.User.UserName));
+            CreateMap<AddUserDto, AppUser>();
+            CreateMap<AppUser, UserDto>();
+
         }
     }
 }

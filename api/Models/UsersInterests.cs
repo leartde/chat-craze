@@ -8,8 +8,8 @@ namespace api.Models
     {
         [Key]
         [ForeignKey(nameof(User))]
-        public int UserId { get; set; }
+        public string UserId { get; set; }
         public AppUser? User { get; set; }
-        public Interests Interest { get; set; }
+        public string? Interest { get; set; }
     }
 }

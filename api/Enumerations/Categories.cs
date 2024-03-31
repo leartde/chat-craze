@@ -1,6 +1,6 @@
 ﻿namespace api.Enumerations
 {
-    public enum Interests
+    public enum Categories
     {
         Technology,
         Movies,

@@ -5,10 +5,9 @@ namespace api.Models
 {
     public class Comment
     {
-        [Column("CommentId")]
         public int Id { get; set; }
         [ForeignKey(nameof(User))]
-        public int UserId { get; set; }
+        public string UserId { get; set; }
         public AppUser? User { get; set; }
         [ForeignKey(nameof(Post))]
         public int PostId { get; set; }
