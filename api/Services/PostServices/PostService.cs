@@ -1,5 +1,5 @@
 ﻿using api.Contracts;
-using api.DataTransferObjects;
+using api.DataTransferObjects.PostDtos;
 using api.RequestFeatures;
 using AutoMapper;
 
@@ -14,11 +14,11 @@ namespace api.Services.PostServices
             _repository = repository;
             _mapper = mapper;
         }
-       public async Task<(IEnumerable<PostDto> posts, MetaData metaData)> GetAllPostsAsync(
-           PostParameters postParameters
-           )
+        public async Task<(IEnumerable<PostDto> posts, MetaData metaData)> GetAllPostsAsync(
+          PostParameters postParameters
+          )
         {
-            var postsWithMetaData = await _repository.Post.GetAllPostsAsync( postParameters );
+            var postsWithMetaData = await _repository.Post.GetAllPostsAsync(postParameters);
             var postDtos = _mapper.Map<IEnumerable<PostDto>>(postsWithMetaData);
             return (postDtos, postsWithMetaData.MetaData);
         }

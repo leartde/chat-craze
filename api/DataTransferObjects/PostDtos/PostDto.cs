@@ -1,4 +1,4 @@
-﻿namespace api.DataTransferObjects
+﻿namespace api.DataTransferObjects.PostDtos
 {
     public class PostDto
     {
@@ -10,5 +10,6 @@
         public string? Category { get; set; }
         public DateTime CreatedAt { get; set; }
         public string? ImageUrl { get; set; }
+        public int? LikeCount { get; set; }
     }
 }

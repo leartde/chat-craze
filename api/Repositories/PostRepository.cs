@@ -25,8 +25,10 @@ namespace api.Repositories
         {
             var posts = await FindAll()
                 .Include(p => p.User)
+                .Include(p => p.Likes)
                 .FilterPosts(postParameters.Category, postParameters.UserName)
                 .Search(postParameters.SearchTerm)
+                .Sort(postParameters.OrderBy)
                 .ToListAsync();
             return PagedList<Post>.ToPagedList(posts, postParameters.PageNumber
                 , postParameters.PageSize);
@@ -36,8 +38,9 @@ namespace api.Repositories
         {
             return await FindByCondition(p => p.Id == id)
                          .Include(p => p.User)
+                         .Include(p => p.Likes)
                           .FirstOrDefaultAsync();
-                
+
         }
 
         public async Task<IEnumerable<Post>> GetPostsByCategoryAsync(string category)

@@ -1,4 +1,6 @@
-﻿using api.DataTransferObjects.UserDtos;
+﻿using api.Contracts;
+using api.DataTransferObjects.PostDtos;
+using api.DataTransferObjects.UserDtos;
 using api.Models;
 using AutoMapper;
 

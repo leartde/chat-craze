@@ -1,7 +1,8 @@
-﻿using api.DataTransferObjects;
+﻿using api.DataTransferObjects.PostDtos;
 using api.RequestFeatures;
 
-namespace api.Services.PostServices {
+namespace api.Services.PostServices
+{
     public interface IPostService
     {
         Task<(IEnumerable<PostDto> posts, MetaData metaData)> GetAllPostsAsync(PostParameters postParameters);
