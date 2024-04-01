@@ -1,4 +1,5 @@
 ﻿using api.Models;
+using System.Diagnostics;
 using System.Linq.Expressions;
 using System.Reflection;
 using System.Text;
@@ -60,6 +61,17 @@ namespace api.Repositories.Extensions
                 return isDescending ?
                     posts.OrderByDescending(p => p.User.UserName)
                     : posts.OrderBy(p => p.User.UserName);
+            }
+            switch(propertyName.ToLower()){
+                case "username":
+                    return isDescending ?
+                    posts.OrderByDescending(p => p.User.UserName)
+                    : posts.OrderBy(p => p.User.UserName);
+                    break;
+                case "likecount":
+                        return isDescending ?
+                    posts.OrderByDescending(p => p.Likes.Count)
+                    : posts.OrderBy(p => p.Likes.Count);
             }
 
             var propertyInfos = typeof(Post).GetProperties(BindingFlags.Public | BindingFlags.Instance);

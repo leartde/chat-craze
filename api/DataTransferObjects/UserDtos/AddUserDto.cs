@@ -10,6 +10,5 @@ namespace api.DataTransferObjects.UserDtos
         public string? Password { get; set; }
         [Required(ErrorMessage = "Email address is required.")]
         public string? Email { get; set; }
-        public string? Role { get; set; }
     }
 }

@@ -104,8 +104,8 @@ namespace api.Services.UserServices
             var user = _mapper.Map<AppUser>(addUserDto);
             
             var result = await _userManager.CreateAsync(user, addUserDto.Password);
-            List<string> roles = [addUserDto.Role];
-            if (result.Succeeded)
+            List<string> roles = ["User"];
+            if (result.Succeeded)   
             {
                 await _userManager.AddToRolesAsync(user, roles);
             }
