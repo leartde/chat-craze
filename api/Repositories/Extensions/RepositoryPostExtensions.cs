@@ -8,7 +8,7 @@ namespace api.Repositories.Extensions
 {
     public static class RepositoryPostExtensions
     {
-        public static IQueryable<Post> FilterPosts(this IQueryable<Post> posts, string? category, string? username)
+        public static IQueryable<Post> Filter(this IQueryable<Post> posts, string? category, string? username)
         {
             if (category == null && username == null) return posts;
 
@@ -24,29 +24,6 @@ namespace api.Repositories.Extensions
             return posts.Where(p => p.Title.ToLower().Contains(lowerCaseTerm));
 
         }
-
-        //public static IQueryable<Post> Sort(this IQueryable<Post> posts, string orderByQueryString)
-        //{
-        //    if (string.IsNullOrWhiteSpace(orderByQueryString))
-        //        return posts.OrderBy(p => p.CreatedAt);
-        //    var orderParams = orderByQueryString.Trim().Split(',');
-        //    var propertyInfos = typeof(Post).GetProperties(BindingFlags.Public | BindingFlags.Instance);
-        //    var orderQueryBuilder = new StringBuilder();
-        //    foreach (var param in orderParams)
-        //    {
-        //        if (string.IsNullOrWhiteSpace(param)) continue;
-        //        var propertyFromQueryName = param.Split(" ")[0];
-        //        var objectProperty = propertyInfos
-        //            .FirstOrDefault(pi => pi.Name
-        //            .Equals(propertyFromQueryName, StringComparison.InvariantCultureIgnoreCase));
-        //        if (objectProperty == null) continue;
-        //        var direction = param.EndsWith(" desc") ? "descending" : "ascending";
-        //        orderQueryBuilder.Append($"{objectProperty.Name.ToString()} {direction}, ");
-        //    }
-        //    var orderQuery = orderQueryBuilder.ToString().TrimEnd(',', ' ');
-        //    if (string.IsNullOrWhiteSpace(orderQuery)) return posts.OrderBy(e => e.CreatedAt);
-        //    return posts.OrderBy(orderQuery);
-        //}
         public static IQueryable<Post> Sort(this IQueryable<Post> posts, string orderByQueryString)
         {
             if (string.IsNullOrWhiteSpace(orderByQueryString))

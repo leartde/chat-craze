@@ -15,6 +15,6 @@ namespace api.Models
         [Required]
         [MaxLength(100,ErrorMessage = "Comment can't be more than 100 characters long.")]
         public string? Content { get; set; }
-        public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
+        public DateTime CreatedAt { get; set; } = DateTime.Now;
     }
 }

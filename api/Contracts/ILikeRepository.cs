@@ -6,7 +6,7 @@ namespace api.Contracts
     {
         Task<IEnumerable<Like>> GetLikesByPostAsync(int postId);
         Task<IEnumerable<Like>> GetLikesByUserAsync(string userId);
-        void AddLike (Post post, AppUser appUser);
+        void AddLike (Like like);
         void RemoveLike(Like like);
     }
 }

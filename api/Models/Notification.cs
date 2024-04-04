@@ -11,7 +11,8 @@ namespace api.Models
         [ForeignKey(nameof(Sender))]
         public string SenderId { get; set; }
         public AppUser? Sender { get; set; }
-        public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
-        public bool isRead { get; set; } = false;
+        public string? Content { get; set; }
+        public DateTime CreatedAt { get; set; } = DateTime.Now;
+        public bool? isRead { get; set; } = false;
     }
 }

@@ -11,9 +11,11 @@ namespace api.Models
         public AppUser? Sender { get; set; }
         [ForeignKey(nameof(Receiver))]
         public string ReceiverId { get; set; }
+
+        public DateTime CreatedAt { get; set; } = DateTime.Now;
         public AppUser? Receiver { get; set; }
-        public InvitationStatus Status { get; set; } = 0;
-        
+        public string Status { get; set; } = "Pending";
+
 
     }
 }

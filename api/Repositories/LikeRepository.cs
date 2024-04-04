@@ -8,26 +8,30 @@ namespace api.Repositories
     public class LikeRepository : RepositoryBase<Like>, ILikeRepository
     {
         public LikeRepository(ApplicationDbContext context) : base(context) { }
-        public void AddLike(Post post, AppUser appUser)
+        public void AddLike(Like like)
         {
-            throw new NotImplementedException();
+            Create(like);
         }
 
         public async Task<IEnumerable<Like>> GetLikesByPostAsync(int postId)
         {
             return await FindByCondition(l => l.PostId == postId)
-                    .AsNoTracking()
+                .Include(l => l.User)
+                .Include(l => l.Post)
                     .ToListAsync();
         }
 
-        public Task<IEnumerable<Like>> GetLikesByUserAsync(string userId)
+        public async Task<IEnumerable<Like>> GetLikesByUserAsync(string userId)
         {
-            throw new NotImplementedException();
+            return await FindByCondition(l => l.UserId == userId)
+                .Include(l => l.User)
+                .Include(l => l.Post)
+                .ToListAsync();
         }
 
         public void RemoveLike(Like like)
         {
-            throw new NotImplementedException();
+            Delete(like);
         }
     }
 }

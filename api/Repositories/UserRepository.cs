@@ -21,7 +21,6 @@ namespace api.Repositories
                    .OrderBy(u => u.UserName)
                    .ToListAsync();
         }
-
         public async Task<AppUser> GetUserAsync(string id)
         {
             return await FindByCondition(u => u.Id.Equals(id))

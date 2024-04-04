@@ -53,6 +53,8 @@ namespace api.Services.UserServices
 
         }
 
+   
+
         private JwtSecurityToken GenerateTokenOptions(SigningCredentials signingCredentials
          , List<Claim> claims)
         {
@@ -77,13 +79,8 @@ namespace api.Services.UserServices
             {
                 claims.Add(new Claim("email", _user.Email));
                 claims.Add(new Claim("id", _user.Id));
-                if (!string.IsNullOrEmpty(_user.AvatarUrl)){
-                    claims.Add(new Claim("avatarUrl", _user.AvatarUrl));
-                }
-                else
-                {
-                    claims.Add(new Claim("avatarUrl", ""));
-                }
+                claims.Add(new Claim("avatarUrl", !string.IsNullOrEmpty(_user.AvatarUrl) ? _user.AvatarUrl : ""));
+
             }
             var roles = await _userManager.GetRolesAsync(_user);
             var role = roles.FirstOrDefault();
@@ -144,7 +141,7 @@ namespace api.Services.UserServices
                 ValidateIssuerSigningKey = true,
                 IssuerSigningKey = new SymmetricSecurityKey(
                     Encoding.UTF8.GetBytes(Environment.GetEnvironmentVariable("SECRET"))
-                    ),
+                ),
                 ValidateLifetime = true,
                 ValidIssuer = _jwtConfiguration.ValidIssuer,
                 ValidAudience = _jwtConfiguration.ValidAudience
@@ -155,32 +152,53 @@ namespace api.Services.UserServices
 
             var jwtSecurityToken = securityToken as JwtSecurityToken;
             if (jwtSecurityToken == null ||
-           !jwtSecurityToken.Header.Alg
-           .Equals(SecurityAlgorithms.HmacSha256, StringComparison.InvariantCultureIgnoreCase))
+                !jwtSecurityToken.Header.Alg
+                    .Equals(SecurityAlgorithms.HmacSha256, StringComparison.InvariantCultureIgnoreCase))
             {
                 throw new SecurityTokenException("Invalid token");
             }
-            return principal;
-        }
+            var identity = new ClaimsIdentity(principal.Claims, principal.Identity.AuthenticationType, ClaimsIdentity.DefaultNameClaimType, ClaimsIdentity.DefaultRoleClaimType);
+            var usernameClaim = identity.FindFirst("username");
+            if (usernameClaim != null)
+            {
+                identity.AddClaim(new Claim(ClaimTypes.Name, usernameClaim.Value));
+            }
+            var newPrincipal = new ClaimsPrincipal(identity);
 
-        public async Task<TokenDto> RefreshRoken(TokenDto tokenDto)
+            return newPrincipal;
+        }
+        
+        public async Task<TokenDto> RefreshToken(TokenDto tokenDto)
         {
             var principal = GetPrincipalFromExpiredToken(tokenDto.AcccesToken);
-            var user = await _userManager.FindByNameAsync(principal.Identity.Name);
-            if (user is null || user.RefreshToken != tokenDto.RefreshToken ||
-              user.RefreshTokenExpiryTime <= DateTime.Now)
+            if (principal.Identity != null)
             {
-                throw new RefreshTokenBadRequest();
+                if (principal.Identity.Name != null)
+                {
+                    var user = await _userManager.FindByNameAsync(principal.Identity.Name);
+                    if (user is null || user.RefreshToken != tokenDto.RefreshToken ||
+                        user.RefreshTokenExpiryTime <= DateTime.Now)
+                    {
+                        throw new BadRequestException("Invalid client request. The tokenDto has some invalid values");
+                    }
+                    _user = user;
+                }
             }
-            _user = user;
+
             return await CreateToken(populateExp: false);
         }
 
         public async Task<IEnumerable<UserDto>> GetAllUsersAsync()
         {
             var users = await _repository.User.GetAllUsersAsync();
-            var usersDto = _mapper.Map<IEnumerable<UserDto>>(users);
-            return usersDto;
+            return  _mapper.Map<IEnumerable<UserDto>>(users);
+        }
+
+        public async Task<UserDto> GetUserAsync(string id)
+        {
+            var user = await _userManager.FindByIdAsync(id);
+            if (user is null) throw new NotFoundException($"User with id {id} doesn't exist.");
+            return _mapper.Map<UserDto>(user);
         }
     }
 }

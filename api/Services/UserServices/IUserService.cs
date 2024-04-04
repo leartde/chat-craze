@@ -8,7 +8,8 @@ namespace api.Services.UserServices
         Task<IdentityResult> RegisterUser(AddUserDto addUserDto);
         Task<bool> ValidateUser(AuthenticateUserDto authenticateUserDto);
         Task<TokenDto> CreateToken(bool populateExp);
-        Task<TokenDto> RefreshRoken(TokenDto tokenDto);
+        Task<TokenDto> RefreshToken(TokenDto tokenDto);
         Task<IEnumerable<UserDto>> GetAllUsersAsync();
+        Task<UserDto> GetUserAsync(string id);
     }
 }

@@ -53,7 +53,7 @@ namespace api.Extensions
                 options.Password.RequireNonAlphanumeric = false;
                 options.Password.RequiredLength = 10;
                 options.User.RequireUniqueEmail = true;
-            })
+                })
                 .AddEntityFrameworkStores<ApplicationDbContext>()
                 .AddDefaultTokenProviders();
         }

@@ -35,12 +35,26 @@ namespace api.Controllers
             var tokenDto = await _service.UserService.CreateToken(populateExp: true);
             return Ok(tokenDto);
         }
+        
+        [HttpPost("refresh")]       
+        public async Task<IActionResult> Refresh([FromBody] TokenDto tokenDto)
+        {
+            var tokenDtoToReturn = await _service.UserService.RefreshToken(tokenDto);
+            return Ok(tokenDtoToReturn);
+        }
 
         [HttpGet("users")]
         public async Task<IActionResult> GetAllUsers()
         {
            var users = await _service.UserService.GetAllUsersAsync();
             return Ok(users);
+        }
+
+        [HttpGet("users/{id}")]
+        public async Task<IActionResult> GetUser(string id)
+        {
+            var user = await _service.UserService.GetUserAsync(id);
+            return Ok(user);
         }
     }
 }

@@ -26,16 +26,16 @@ namespace api.Controllers
         public async Task<IActionResult> GetPost(int id)
         {
             var post = await _service.PostService.GetPostAsync(id);
-            if (post == null) return NotFound($"Post with id {id} does not exist");
             return Ok(post);
         }
-        //[HttpGet("category/{category}")]
-        //public async Task<IActionResult> GetPostsByCategory(string category)
-        //{
-        //    var posts = await _service.PostService.GetPostsByCategoryAsync(category);
-        //    if (posts == null) return NotFound($"No posts found with {category} category");    
-        //    return Ok(posts);
-        //}
+        
+        [HttpDelete("{id}")]
+        public async Task<IActionResult> DeletePost(int id)
+        {
+            await _service.PostService.DeletePostAsync(id);
+            return Ok("Post successfully deleted");
+        }
+
 
     }
 }

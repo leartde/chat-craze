@@ -15,6 +15,6 @@ namespace api.Models
         [Required(ErrorMessage ="Reply content is required.")]
         [MaxLength(60,ErrorMessage ="Reply can't be more than 60 characters long.")]
         public string? Content { get; set; }
-        public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
+        public DateTime CreatedAt { get; set; } = DateTime.Now;
     }
 }

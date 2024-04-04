@@ -13,12 +13,12 @@ namespace api.Repositories
 
         public void CreatePost(Post post)
         {
-            throw new NotImplementedException();
+            Update(post);
         }
 
         public void DeletePost(Post post)
         {
-            throw new NotImplementedException();
+            Delete(post);
         }
 
         public async Task<PagedList<Post>> GetAllPostsAsync(PostParameters postParameters)
@@ -26,7 +26,7 @@ namespace api.Repositories
             var posts = await FindAll()
                 .Include(p => p.User)
                 .Include(p => p.Likes)
-                .FilterPosts(postParameters.Category, postParameters.UserName)
+                .Filter(postParameters.Category, postParameters.UserName)
                 .Search(postParameters.SearchTerm)
                 .Sort(postParameters.OrderBy)
                 .ToListAsync();

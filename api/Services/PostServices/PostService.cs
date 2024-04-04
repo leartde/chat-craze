@@ -1,5 +1,6 @@
 ﻿using api.Contracts;
 using api.DataTransferObjects.PostDtos;
+using api.Exceptions;
 using api.RequestFeatures;
 using AutoMapper;
 
@@ -25,21 +26,23 @@ namespace api.Services.PostServices
 
         public async Task<PostDto> GetPostAsync(int id)
         {
+            await CheckIfPostExistsAsync(id);
             var post = await _repository.Post.GetPostAsync(id);
-            var postDto = _mapper.Map<PostDto>(post);
-            return postDto;
+            return _mapper.Map<PostDto>(post);
         }
 
-        public async Task<IEnumerable<PostDto>> GetPostsByCategoryAsync(string category)
+        public async Task DeletePostAsync(int id)
         {
-            var posts = await _repository.Post.GetPostsByCategoryAsync(category);
-            var postDtos = _mapper.Map<IEnumerable<PostDto>>(posts);
-            return postDtos;
+            await CheckIfPostExistsAsync(id);
+            var post = await _repository.Post.GetPostAsync(id);
+            _repository.Post.DeletePost(post);
+            await _repository.SaveAsync();
         }
 
-        public Task<IEnumerable<PostDto>> GetPostsByUserAsync(string username)
+        private async Task CheckIfPostExistsAsync(int postId)
         {
-            throw new NotImplementedException();
+            var post = await _repository.Post.GetPostAsync(postId);
+            if (post is null) throw new NotFoundException($"Post with id {postId} not found.");
         }
     }
     
