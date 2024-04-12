@@ -10,6 +10,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
+using api.Services.PhotoServices;
 
 namespace api.Extensions
 {
@@ -43,6 +44,10 @@ namespace api.Extensions
         public static void ConfigureLoggerService(this IServiceCollection services)
         {
             services.AddSingleton<ILoggerManager, LoggerManager>();
+        }
+        public static void ConfigurePhotoService(this IServiceCollection services)
+        {
+            services.AddScoped<IPhotoService, PhotoService>();
         }
         public static void ConfigureIdentity(this IServiceCollection services)
         {

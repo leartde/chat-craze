@@ -7,6 +7,7 @@ namespace api.Services.PostServices
     {
         Task<(IEnumerable<PostDto> posts, MetaData metaData)> GetAllPostsAsync(PostParameters postParameters);
         Task<PostDto> GetPostAsync(int id);
+        Task AddPostAsync(AddPostDto postDto);
         Task DeletePostAsync(int id);
 
     }

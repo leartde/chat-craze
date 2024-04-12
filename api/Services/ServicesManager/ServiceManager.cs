@@ -6,6 +6,7 @@ using api.Services.FriendshipServices;
 using api.Services.InvitationServices;
 using api.Services.LikeServices;
 using api.Services.NotificationServices;
+using api.Services.PhotoServices;
 using api.Services.PostServices;
 using api.Services.ReplyServices;
 using api.Services.UserServices;
@@ -27,14 +28,15 @@ namespace api.Services.ServicesManager
         private readonly Lazy<IUsersInterestsService> _usersInterestsService;
         private readonly Lazy<ICommentService> _commentService;
         private readonly Lazy<IReplyService> _replyService;
+        private readonly Lazy<IPhotoService> _photoService;
 
         public ServiceManager(IRepositoryManager repositoryManager, ILoggerManager logger,
-            IMapper mapper, UserManager<AppUser> userManager, IConfiguration configuration
+            IMapper mapper, UserManager<AppUser> userManager, IConfiguration configuration, IPhotoService photoService
         )
         {
             _userService = new Lazy<IUserService>(() =>
                 new UserService(repositoryManager, logger, mapper, userManager, configuration));
-            _postService = new Lazy<IPostService>(() => new PostService(repositoryManager, mapper));
+            _postService = new Lazy<IPostService>(() => new PostService(repositoryManager, mapper, photoService));
             _invitationService = new Lazy<IInvitationService>(() => new InvitationService(repositoryManager, mapper));
             _notificationService =
                 new Lazy<INotificationService>(() => new NotificationService(repositoryManager, mapper));
@@ -45,6 +47,7 @@ namespace api.Services.ServicesManager
                 new Lazy<IUsersInterestsService>(() => new UsersInterestsService(repositoryManager, mapper));
             _commentService = new Lazy<ICommentService>(() => new CommentService(repositoryManager, mapper));
             _replyService = new Lazy<IReplyService>(() => new ReplyService(repositoryManager, mapper));
+         
         }
 
         public IPostService PostService => _postService.Value;
@@ -58,5 +61,6 @@ namespace api.Services.ServicesManager
         public IUsersInterestsService UsersInterestsService => _usersInterestsService.Value;
         public ICommentService CommentService => _commentService.Value;
         public IReplyService ReplyService => _replyService.Value;
+    
     }
 }

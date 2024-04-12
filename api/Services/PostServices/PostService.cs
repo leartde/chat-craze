@@ -1,7 +1,9 @@
 ﻿using api.Contracts;
 using api.DataTransferObjects.PostDtos;
 using api.Exceptions;
+using api.Models;
 using api.RequestFeatures;
+using api.Services.PhotoServices;
 using AutoMapper;
 
 namespace api.Services.PostServices
@@ -10,10 +12,12 @@ namespace api.Services.PostServices
     {
         private readonly IRepositoryManager _repository;
         private readonly IMapper _mapper;
-        public PostService(IRepositoryManager repository, IMapper mapper)
+        private readonly IPhotoService _photoService;
+        public PostService(IRepositoryManager repository, IMapper mapper, IPhotoService photoService)
         {
             _repository = repository;
             _mapper = mapper;
+            _photoService = photoService;
         }
         public async Task<(IEnumerable<PostDto> posts, MetaData metaData)> GetAllPostsAsync(
           PostParameters postParameters
@@ -29,6 +33,18 @@ namespace api.Services.PostServices
             await CheckIfPostExistsAsync(id);
             var post = await _repository.Post.GetPostAsync(id);
             return _mapper.Map<PostDto>(post);
+        }
+
+        public async Task AddPostAsync(AddPostDto postDto)
+        {
+            if(postDto.ImageFile is null) throw new BadRequestException("Image is null");
+            var photoResult = await _photoService.AddPhotoAsync(postDto.ImageFile);
+            if(photoResult.Error != null) throw new Exception(photoResult.Error.Message);
+            postDto.ImageUrl = photoResult.Url.ToString();
+           var post = _mapper.Map<Post>(postDto);
+            _repository.Post.CreatePost(post);
+            await _repository.SaveAsync();
+
         }
 
         public async Task DeletePostAsync(int id)

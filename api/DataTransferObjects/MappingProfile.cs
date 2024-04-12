@@ -20,9 +20,11 @@ namespace api.DataTransferObjects
             CreateMap<Post, PostDto>()
              .ForMember(dest => dest.UserName, opt => opt.MapFrom(src => src.User!.UserName))
               .ForMember(dest => dest.LikeCount, opt => opt.MapFrom<LikesResolver>());
+            CreateMap<AddPostDto, Post>();
             
             CreateMap<AddUserDto, AppUser>();
-            CreateMap<AppUser, UserDto>();
+            CreateMap<AppUser, UserDto>()
+                .ForMember(dest => dest.Role, opt => opt.MapFrom<RolesResolver>());
             
             CreateMap<Invitation, InvitationDto>()
                 .ForMember(dest => dest.SenderUsername, opt => opt.MapFrom(src => src.Sender!.UserName))

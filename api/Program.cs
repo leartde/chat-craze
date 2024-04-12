@@ -12,6 +12,7 @@ builder.Services.ConfigureCors();
 builder.Services.ConfigureLoggerService();
 builder.Services.ConfigureRepositoryManager();
 builder.Services.ConfigureServiceManager();
+builder.Services.ConfigurePhotoService();
 builder.Services.AddAutoMapper(typeof(Program));
 builder.Services.ConfigureMySql(builder.Configuration);
 builder.Services.ConfigureIdentity();

@@ -3,6 +3,7 @@ using api.RequestFeatures;
 using api.Services.ServicesManager;
 using Microsoft.AspNetCore.Mvc;
 using System.Text.Json;
+using api.DataTransferObjects.PostDtos;
 
 namespace api.Controllers
 {
@@ -34,6 +35,12 @@ namespace api.Controllers
         {
             await _service.PostService.DeletePostAsync(id);
             return Ok("Post successfully deleted");
+        }
+        [HttpPost]
+        public async Task<IActionResult> AddPost([FromForm]AddPostDto postDto)
+        {
+            await _service.PostService.AddPostAsync(postDto);
+            return Ok("Post successfully added");
         }
 
 

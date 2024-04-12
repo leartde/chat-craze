@@ -4,6 +4,7 @@ using api.Services.FriendshipServices;
 using api.Services.InvitationServices;
 using api.Services.LikeServices;
 using api.Services.NotificationServices;
+using api.Services.PhotoServices;
 using api.Services.PostServices;
 using api.Services.ReplyServices;
 using api.Services.UserServices;
@@ -23,6 +24,7 @@ namespace api.Services.ServicesManager
         IUsersInterestsService UsersInterestsService { get; }
         ICommentService CommentService { get; }
         IReplyService ReplyService { get; }
+        
          
     }
 }

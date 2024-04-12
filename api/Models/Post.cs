@@ -19,8 +19,13 @@ namespace api.Models
         [MaxLength(1000,ErrorMessage ="Title can't be more than 1000 characters long")]
         public string? Content { get; set; }
         
+        [Required(ErrorMessage ="Category is required.")]
+        [MaxLength(20)]
         public string? Category { get; set; }
         public DateTime CreatedAt { get; set; } = DateTime.Now;
+        
+        [Required(ErrorMessage = "Image is required.")]
+        [MaxLength(1000)]
         public string? ImageUrl { get; set; }
         public ICollection<Comment>? Comments { get; set; }
         public ICollection<Like>? Likes { get; set; }

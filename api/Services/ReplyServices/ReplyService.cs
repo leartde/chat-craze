@@ -20,8 +20,7 @@ public class ReplyService : IReplyService
     {
         await EnsurePostAndCommentExistAsync(postId, commentId);
         var comment = await _repository.Comment.GetCommentForPostAsync(commentId, postId);
-        if (comment is null) throw new NotFoundException("Comment not found.");
-        var replies = await _repository.Reply.GetRepliesForCommentAsync(comment.Id);
+        var replies = await _repository.Reply.GetRepliesForCommentAsync(comment!.Id);
         return _mapper.Map<IEnumerable<ReplyDto>>(replies);
     }
 
@@ -29,7 +28,7 @@ public class ReplyService : IReplyService
     {
         await EnsurePostAndCommentExistAsync(postId, commentId);
         var comment = await _repository.Comment.GetCommentForPostAsync(commentId, postId);
-        var reply = await _repository.Reply.GetReplyForCommentAsync(comment.Id, id);
+        var reply = await _repository.Reply.GetReplyForCommentAsync(comment!.Id, id);
         if (reply is null) throw new NotFoundException("Reply not found");
         return _mapper.Map<ReplyDto>(reply);
     }
