@@ -5,6 +5,7 @@ using api.DataTransferObjects.InvitationDtos;
 using api.DataTransferObjects.LikeDtos;
 using api.DataTransferObjects.NotificationDtos;
 using api.DataTransferObjects.PostDtos;
+using api.DataTransferObjects.PostDtos.api.DataTransferObjects.PostDtos;
 using api.DataTransferObjects.ReplyDtos;
 using api.DataTransferObjects.UserDtos;
 using api.DataTransferObjects.UsersInterestsDtos;

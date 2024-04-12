@@ -1,5 +1,6 @@
 ﻿using api.Contracts;
 using api.DataTransferObjects.PostDtos;
+using api.DataTransferObjects.PostDtos.api.DataTransferObjects.PostDtos;
 using api.Exceptions;
 using api.Models;
 using api.RequestFeatures;
@@ -20,8 +21,8 @@ namespace api.Services.PostServices
             _photoService = photoService;
         }
         public async Task<(IEnumerable<PostDto> posts, MetaData metaData)> GetAllPostsAsync(
-          PostParameters postParameters
-          )
+            PostParameters postParameters
+        )
         {
             var postsWithMetaData = await _repository.Post.GetAllPostsAsync(postParameters);
             var postDtos = _mapper.Map<IEnumerable<PostDto>>(postsWithMetaData);

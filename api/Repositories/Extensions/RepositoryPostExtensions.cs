@@ -8,22 +8,34 @@ namespace api.Repositories.Extensions
 {
     public static class RepositoryPostExtensions
     {
-        public static IQueryable<Post> Filter(this IQueryable<Post> posts, string? category, string? username)
+        public static IQueryable<Post> Filter(this IQueryable<Post> posts, string? category , string? username)
         {
-            if (category == null && username == null) return posts;
+            if (string.IsNullOrWhiteSpace(category) && string.IsNullOrWhiteSpace(username))
+            {
+                try
+                {
+                    return posts;
+                }
+                catch(SystemException e)
+                {
+                    Console.WriteLine("Error fetching posts", e.Message);
+                }
+            }
 
             return posts.Where(p =>
-                (category == null || p.Category.Equals(category)) &&
-                (username == null || p.User.UserName.Equals(username)));
+                (category == null || p.Category != null && p.Category.Equals(category)) &&
+                (username == null || p.User != null && p.User.UserName != null && p.User.UserName.Equals(username)));
         }
 
-        public static IQueryable<Post> Search(this IQueryable<Post> posts, string searchTerm)
+
+        public static IQueryable<Post> Search(this IQueryable<Post> posts, string? searchTerm)
         {
             if (string.IsNullOrWhiteSpace(searchTerm)) return posts;
-            var lowerCaseTerm = searchTerm.ToLower();
-            return posts.Where(p => p.Title.ToLower().Contains(lowerCaseTerm));
 
+            var lowerCaseTerm = searchTerm.ToLower();
+            return posts.Where(p => p.Title!.ToLower().Contains(lowerCaseTerm));
         }
+
         public static IQueryable<Post> Sort(this IQueryable<Post> posts, string orderByQueryString)
         {
             if (string.IsNullOrWhiteSpace(orderByQueryString))

@@ -1,4 +1,5 @@
 ﻿using api.DataTransferObjects.PostDtos;
+using api.DataTransferObjects.PostDtos.api.DataTransferObjects.PostDtos;
 using api.RequestFeatures;
 
 namespace api.Services.PostServices

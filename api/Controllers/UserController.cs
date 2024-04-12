@@ -26,7 +26,7 @@ namespace api.Controllers
                 }
                 return BadRequest(ModelState);
             }
-            return StatusCode(201);
+            return Ok("User successfully registered");
         }
         [HttpPost("authentication/login")]
         public async Task<IActionResult> Authenticate([FromBody] AuthenticateUserDto user)

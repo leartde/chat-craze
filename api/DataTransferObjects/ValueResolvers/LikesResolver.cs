@@ -4,6 +4,7 @@ using api.DataTransferObjects.PostDtos;
 using api.Models;
 using AutoMapper;
 using System.Linq;
+using api.DataTransferObjects.PostDtos.api.DataTransferObjects.PostDtos;
 
 namespace api.DataTransferObjects.ValueResolvers
 {
