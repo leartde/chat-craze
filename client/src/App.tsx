@@ -1,10 +1,16 @@
-
+import { BrowserRouter, Outlet, Route, Routes } from "react-router-dom"
+import Navbar from "./Components/Navbar"
+import Footer from "./Components/Footer"
+import RouteTester from "./Pages/RouteTester"
 function App() {
 
 
   return (
     <>
-      <h2 className="text-blue-600 text-center text-7xl  "> Home:) </h2>
+      <Navbar/>
+     <Outlet/>
+     <Footer/>
+
     </>
   )
 }
