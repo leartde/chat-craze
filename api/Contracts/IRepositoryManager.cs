@@ -10,6 +10,8 @@
         IFriendshipRepository Friendship { get; }
         IBookmarkRepository Bookmark { get; }
         IUsersInterestsRepository UsersInterests { get; }
+        ICommentRepository Comment { get; }
+        IReplyRepository Reply { get; }
         Task SaveAsync();
     }
 }

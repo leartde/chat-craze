@@ -2,19 +2,19 @@
 {
     public enum Categories
     {
-        technology,
-        movies,
-        tvShows,
-        gaming,
-        sport,
-        music,
-        anime,
-        cartoons,
-        cars,
-        politics,
-        nature,
-        history,
-        geography,
-        programming        
+        Technology,
+        Movies,
+        TvShows,
+        Gaming,
+        Sport,
+        Music,
+        Anime,
+        Cartoons,
+        Cars,
+        Politics,
+        Nature,
+        History,
+        Geography,
+        Programming        
     }
 }

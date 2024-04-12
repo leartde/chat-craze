@@ -5,7 +5,7 @@ using Microsoft.AspNetCore.Mvc;
 namespace api.Controllers
 {
    [ApiController]
-   [Route("/api/notifications")]
+   [Route("/api/users/{userId}/notifications")]
     public class NotificationController : ControllerBase
     {
         private readonly IServiceManager _service;
@@ -14,11 +14,11 @@ namespace api.Controllers
         {
             _service = service;
         }
-        [HttpGet("{receiverId}")]
-        public async Task<IActionResult> GetNotificationsForReceiver(string receiverId)
+        [HttpGet]
+        public async Task<IActionResult> GetNotificationsForReceiver(string userId)
         {
             var notifications = await _service
-                .NotificationService.GetNotificationsForReceiverAsync(receiverId);
+                .NotificationService.GetNotificationsForReceiverAsync(userId);
             return Ok(notifications);
         }
 

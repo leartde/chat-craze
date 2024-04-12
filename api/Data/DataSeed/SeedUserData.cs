@@ -7,7 +7,7 @@ namespace api.Data.DataSeed
 {
     public class SeedUserData : IEntityTypeConfiguration<AppUser>
     {
-        public async void Configure(EntityTypeBuilder<AppUser> builder)
+        public  void Configure(EntityTypeBuilder<AppUser> builder)
         {
             var passwordHasher = new PasswordHasher<AppUser>();
 

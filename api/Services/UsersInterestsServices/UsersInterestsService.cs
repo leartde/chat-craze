@@ -11,12 +11,17 @@ public class UsersInterestsService : IUsersInterestsService
 {
     private readonly IRepositoryManager _repository;
     private readonly IMapper _mapper;
+    private readonly List<string> _allowedInterests = Enum.GetValues(typeof(Categories))
+        .Cast<Categories>()
+        .Select(e => e.ToString().ToLower())
+        .ToList();
 
     public UsersInterestsService(IRepositoryManager repository, IMapper mapper)
     {
         _repository = repository;
         _mapper = mapper;
     }
+    
     public async Task<IList<string>> GetInterestsForUserAsync(string userId)
     {
         await CheckIfUserExistsAsync(userId);
@@ -25,7 +30,7 @@ public class UsersInterestsService : IUsersInterestsService
         IList<string> interestsToReturn = new List<string>();
         foreach (var interest in usersInterests)
         {
-            interestsToReturn.Add(interest.Interest);
+            if (interest.Interest != null) interestsToReturn.Add(interest.Interest);
         }
 
         return interestsToReturn;
@@ -33,16 +38,8 @@ public class UsersInterestsService : IUsersInterestsService
 
     public async Task AddInterestsForUserAsync(string userId, IList<string> interests)
     {
-        List<string> allowedInterests = Enum.GetValues(typeof(Categories))
-            .Cast<Categories>()
-            .Select(e => e.ToString())
-            .ToList();
-
-        if (interests.Any(interest => !allowedInterests.Contains(interest, StringComparer.OrdinalIgnoreCase)))
-        {
-            throw new BadRequestException("Interest not in categories list.");
-        }
-
+        await CheckIfUserExistsAsync(userId);
+        ValidateInterestsInput(interests);
         List<UsersInterestsDto> usersInterestsDtos = interests
             .Select(interest => new UsersInterestsDto { UserId = userId, Interest = interest.ToLower() })
             .ToList();
@@ -56,21 +53,54 @@ public class UsersInterestsService : IUsersInterestsService
 
         await _repository.SaveAsync();
     }
-
     
-
-    public async Task UpdateInterestsForUserAsync(ICollection<UsersInterestsDto> usersInterests)
+    public async Task UpdateInterestsForUserAsync(string userId, IList<string> interests)
     {
-        throw new NotImplementedException();
-    }
+        await CheckIfUserExistsAsync(userId);
+        ValidateInterestsInput(interests);
+       var usersInterests = await _repository.UsersInterests
+            .GetUsersInterestsForUserAsync(userId);
+            
+            foreach (var currentInterest in usersInterests)
+            {
+                if (!interests.Any(i => i.Contains(currentInterest.Interest)))
+                {
+                    _repository.UsersInterests.DeleteUsersInterests(currentInterest);
+                }
+                else if (interests.Any(i => i.ToLower().Equals(currentInterest.Interest)))
+                {
+                    interests.Remove(currentInterest.Interest);
+                }
+                else if (interests is null)
+                {
+                    _repository.UsersInterests.DeleteUsersInterests(currentInterest);
+                }
+            }
+            List<UsersInterestsDto> usersInterestsDtos = interests
+                .Select(interest => new UsersInterestsDto { UserId = userId, Interest = interest.ToLower() })
+                .ToList();
+            var usersInterestsToCreate = _mapper.Map<List<UsersInterests>>(usersInterestsDtos);
 
-    public async Task DeleteInterestsForUserAsync(ICollection<UsersInterestsDto> usersInterests)
-    {
-        throw new NotImplementedException();
+            foreach (var userInterest in usersInterestsToCreate)
+            {
+                _repository.UsersInterests.CreateUsersInterests(userInterest);
+            }
+            await _repository.SaveAsync();
     }
+    
     private async Task CheckIfUserExistsAsync(string userId)
     {
         var user = await _repository.User.GetUserAsync(userId);
         if (user is null) throw new NotFoundException($"User with id {userId} not found.");
+    }
+
+    private void ValidateInterestsInput(IList<string> interests)
+    {
+        var duplicateItems = interests.GroupBy(x => x.ToLower())
+            .Where(group => group.Count() > 1)
+            .Select(group => group.Key);
+        if (duplicateItems.Any()) throw new BadRequestException("Duplicate inputs");
+        if (interests.Any(interest => !_allowedInterests.Contains(interest, StringComparer.OrdinalIgnoreCase)))
+            throw new BadRequestException("Interest not in categories list.");
     }
 }

@@ -30,33 +30,37 @@ internal sealed class InvitationService : IInvitationService
         return _mapper.Map<IEnumerable<InvitationDto>>(invitations);
     }
 
-    public async Task CreateInvitationAsync(AddInvitationDto addInvitationDto)
+    public async Task CreateInvitationAsync(string senderId, string receiverId)
     {
-        await ValidateInvitationAsync(addInvitationDto);  
-        var invitation = _mapper.Map<Invitation>(addInvitationDto);
+        await ValidateInvitationAsync(senderId, receiverId);
+        var invitation = new Invitation
+        {
+            SenderId = senderId,
+            ReceiverId = receiverId
+        };
         _repository.Invite.CreateInvitation(invitation);
-        await SendInviteNotificationAsync(addInvitationDto.SenderId, addInvitationDto.ReceiverId);
+        await SendInviteNotificationAsync(senderId, receiverId);
         await _repository.SaveAsync();
     }
 
-    public async Task CancelInvitationAsync(DeleteInvitationDto deleteInvitationDto)
+    public async Task CancelInvitationAsync(string senderId, string receiverId)
     {
         var invitations = await _repository.Invite
-            .GetInvitationsForSenderAsync(deleteInvitationDto.SenderId);
+            .GetInvitationsForSenderAsync(senderId);
         var invitationToDelete = invitations
-            .FirstOrDefault(i => i.ReceiverId.Equals(deleteInvitationDto.ReceiverId));
+            .FirstOrDefault(i => i.ReceiverId.Equals(receiverId));
         if (invitationToDelete is null) throw new NotFoundException("Invitation not found");
             _repository.Invite.DeleteInvitation(invitationToDelete);
             await _repository.SaveAsync();
         
     }
 
-    public async Task DeclineInvitationAsync(UpdateInvitationDto deleteInvitationDto)
+    public async Task DeclineInvitationAsync(string senderId, string receiverId)
     {
         var invitations = await _repository
-            .Invite.GetInvitationsForReceiverAsync(deleteInvitationDto.ReceiverId);
+            .Invite.GetInvitationsForReceiverAsync(receiverId);
         var invitationToDecline = invitations
-            .FirstOrDefault(i => i.SenderId.Equals(deleteInvitationDto.SenderId));
+            .FirstOrDefault(i => i.SenderId.Equals(senderId));
         if (invitationToDecline is null) throw new NotFoundException("Invitation not found");
             invitationToDecline.Status = "Declined";
             _repository.Invite.UpdateInvitation(invitationToDecline);
@@ -64,13 +68,13 @@ internal sealed class InvitationService : IInvitationService
         
     }
 
-    private async Task ValidateInvitationAsync(AddInvitationDto addInvitationDto)
+    private async Task ValidateInvitationAsync(string senderId, string receiverId)
     {
-        await CheckIfUserExistsAsync(addInvitationDto.SenderId);
-        await CheckIfUserExistsAsync(addInvitationDto.ReceiverId);
-        if (addInvitationDto.SenderId.Equals(addInvitationDto.ReceiverId))
+        await CheckIfUserExistsAsync(senderId);
+        await CheckIfUserExistsAsync(receiverId);
+        if (senderId.Equals(receiverId))
             throw new BadRequestException("SenderId and ReceiverId are equal");
-        await CheckIfInviteExistsAsync(addInvitationDto.SenderId, addInvitationDto.ReceiverId);
+        await CheckIfInviteExistsAsync(senderId,receiverId);
     }
     private async Task SendInviteNotificationAsync(string senderId, string receiverId)
     {

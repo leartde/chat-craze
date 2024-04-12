@@ -30,26 +30,28 @@ public class LikeService : ILikeService
         return _mapper.Map<IEnumerable<LikeDto>>(likes);
     }
 
-    public async Task AddLikeAsync(AddLikeDto addLikeDto)
+    public async Task AddLikeAsync(int postId, string userId)
     {
-        await CheckIfLikeExistsAsync(addLikeDto.UserId, addLikeDto.PostId);
-        var like = _mapper.Map<Like>(addLikeDto);
+        await CheckIfLikeExistsAsync(userId, postId);
+        var like = new Like
+        {
+            PostId = postId,
+            UserId = userId
+        };
          _repository.Like.AddLike(like);
          await _repository.SaveAsync();
     }
 
-    public async Task RemoveLikeAsync(DeleteLikeDto deleteLikeDto)
+    public async Task RemoveLikeAsync(int postId, string userId)
     {
-        var likes = await _repository.Like.GetLikesByUserAsync(deleteLikeDto.UserId);
-        var likeToDelete = likes.FirstOrDefault(l => l.PostId.Equals(deleteLikeDto.PostId));
+        var likes = await _repository.Like.GetLikesByUserAsync(userId);
+        var likeToDelete = likes.FirstOrDefault(l => l.PostId.Equals(postId));
         if (likeToDelete is null) throw new NotFoundException("Like doesn't exist");
             _repository.Like.RemoveLike(likeToDelete);
             await _repository.SaveAsync();
         
     }
-
     
-
     private async Task CheckIfPostExistsAsync(int postId)
     {
         var post = await _repository.Post.GetPostAsync(postId);

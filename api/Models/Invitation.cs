@@ -7,10 +7,10 @@ namespace api.Models
     {
         public int Id { get; set; }
         [ForeignKey(nameof(Sender))]
-        public string SenderId { get; set; }
+        public string? SenderId { get; set; }
         public AppUser? Sender { get; set; }
         [ForeignKey(nameof(Receiver))]
-        public string ReceiverId { get; set; }
+        public string? ReceiverId { get; set; }
 
         public DateTime CreatedAt { get; set; } = DateTime.Now;
         public AppUser? Receiver { get; set; }

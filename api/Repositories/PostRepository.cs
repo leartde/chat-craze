@@ -34,7 +34,7 @@ namespace api.Repositories
                 , postParameters.PageSize);
         }
 
-        public async Task<Post> GetPostAsync(int id)
+        public async Task<Post?> GetPostAsync(int id)
         {
             return await FindByCondition(p => p.Id == id)
                          .Include(p => p.User)
@@ -42,19 +42,7 @@ namespace api.Repositories
                           .FirstOrDefaultAsync();
 
         }
-
-        public async Task<IEnumerable<Post>> GetPostsByCategoryAsync(string category)
-        {
-            return await FindByCondition(p => p.Category == category)
-                .Include(p => p.User)
-                .ToListAsync();
-        }
-
-        public Task<IEnumerable<Post>> GetPostsByUserAsync(string username)
-        {
-            throw new NotImplementedException();
-        }
-
+        
         public void UpdatePost(Post post)
         {
             throw new NotImplementedException();

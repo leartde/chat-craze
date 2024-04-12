@@ -2,7 +2,7 @@
 using Microsoft.AspNetCore.Mvc;
 
 namespace api.Controllers;
-[Route("/api/authentication/users/{userId}/interests")]
+[Route("/api/users/{userId}/interests")]
 public class UsersInterestsController : ControllerBase
 {
     private readonly IServiceManager _service;
@@ -24,5 +24,11 @@ public class UsersInterestsController : ControllerBase
     {
         await _service.UsersInterestsService.AddInterestsForUserAsync(userId, interests);
         return Ok("Interests successfully added.");
+    }
+    [HttpPut]
+    public async Task<IActionResult> UpdateInterestsForUser(string userId, IList<string> interests)
+    {
+        await _service.UsersInterestsService.UpdateInterestsForUserAsync(userId, interests);
+        return Ok("Interests successfully updated.");
     }
 }

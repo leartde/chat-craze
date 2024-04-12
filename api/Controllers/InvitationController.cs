@@ -5,7 +5,7 @@ using Microsoft.AspNetCore.Mvc;
 namespace api.Controllers
 {
     [ApiController]
-    [Route("/api/invitations")]
+    [Route("/api/users/{userId}/invitations")]
     public class InvitationController : ControllerBase
     {
         private readonly IServiceManager _service;
@@ -15,41 +15,41 @@ namespace api.Controllers
             _service = service;
         }
 
-        [HttpGet("sender/{senderId}")]
-        public async Task<IActionResult> GetInvitationsForSender(string senderId)
+        [HttpGet("sent")]
+        public async Task<IActionResult> GetInvitationsForSender(string userId)
         {
-            var invitations = await _service.InvitationService.GetInvitationsForSenderAsync(senderId);
+            var invitations = await _service.InvitationService.GetInvitationsForSenderAsync(userId);
             return Ok(invitations);
 
         }
 
-        [HttpGet("receiver/{receiverId}")]
-        public async Task<IActionResult> GetInvitationsForReceiver(string receiverId)
+        [HttpGet("received")]
+        public async Task<IActionResult> GetInvitationsForReceiver(string userId)
         {
 
-            var invitations = await _service.InvitationService.GetInvitationsForReceiverAsync(receiverId);
+            var invitations = await _service.InvitationService.GetInvitationsForReceiverAsync(userId);
             return Ok(invitations);
 
         }
 
         [HttpPost]
-        public async Task<IActionResult> CreateInvitation([FromBody] AddInvitationDto invitationDto)
+        public async Task<IActionResult> CreateInvitation( string userId, string receiverId)
         {
-            await _service.InvitationService.CreateInvitationAsync(invitationDto);
+            await _service.InvitationService.CreateInvitationAsync(userId, receiverId);
             return Ok("Invitation succesfully sent");
         }
 
         [HttpDelete]
-        public async Task<IActionResult> DeleteInvitation(DeleteInvitationDto deleteInvitationDto)
+        public async Task<IActionResult> DeleteInvitation(string userId, string receiverId)
         {
-            await _service.InvitationService.CancelInvitationAsync(deleteInvitationDto);
+            await _service.InvitationService.CancelInvitationAsync(userId, receiverId);
             return Ok("Invitation successfully canceled");
         }
 
         [HttpPut("decline")]
-        public async Task<IActionResult> DeclineInvitation(UpdateInvitationDto updateInvitationDto)
+        public async Task<IActionResult> DeclineInvitation(string senderId, string userId)
         {
-            await _service.InvitationService.DeclineInvitationAsync(updateInvitationDto);
+            await _service.InvitationService.DeclineInvitationAsync(senderId, userId);
             return Ok("Invitation succesfully declined");
         }
     }

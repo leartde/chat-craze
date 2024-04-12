@@ -5,7 +5,7 @@ using Microsoft.AspNetCore.Mvc;
 namespace api.Controllers;
 
 [ApiController]
-[Route("/api/friendships")]
+[Route("/api/users/{userId}/friendships")]
 public class FriendshipController : ControllerBase
 {
     private readonly IServiceManager _service;
@@ -15,7 +15,7 @@ public class FriendshipController : ControllerBase
         _service = service;
     }
 
-    [HttpGet("{userId}")]
+    [HttpGet]
     public async Task<IActionResult>  GetFriendshipsForUser(string userId)
     {
         var friendships = await _service.FriendshipService
@@ -24,16 +24,16 @@ public class FriendshipController : ControllerBase
     }
 
     [HttpPost]
-    public async Task<IActionResult> CreateFriendship(AddFriendshipDto addFriendshipDto)
+    public async Task<IActionResult> CreateFriendship(string senderId, string userId)
     {
-        await _service.FriendshipService.CreateFriendshipAsync(addFriendshipDto);
+        await _service.FriendshipService.CreateFriendshipAsync(senderId, userId);
         return Ok("Friendship succesfully created");
     }
 
     [HttpDelete]
-    public async Task<IActionResult> DeleteFriendship(DeleteFriendshipDto deleteFriendshipDto)
+    public async Task<IActionResult> DeleteFriendship(string userId, string friendId)
     {
-        await _service.FriendshipService.DeleteFriendshipAsync(deleteFriendshipDto);
+        await _service.FriendshipService.DeleteFriendshipAsync(userId, friendId);
         return Ok("Friendship deleted successfully");
     }
 }

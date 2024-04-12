@@ -13,7 +13,7 @@ public class NotificationRepository : RepositoryBase<Notification>, INotificatio
 
     public async Task<IEnumerable<Notification>> GetNotificationsForReceiverAsync(string receiverId)
     {
-        return await FindByCondition(n => n.Receiver.Id.Equals(receiverId))
+        return await FindByCondition(n => n.Receiver != null && n.Receiver.Id.Equals(receiverId))
             .Include(n => n.Sender)
             .Include(n => n.Receiver)
             .ToListAsync();

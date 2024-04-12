@@ -7,6 +7,6 @@ public interface IUsersInterestsService
 {
     Task<IList<string>> GetInterestsForUserAsync(string userId);
     Task AddInterestsForUserAsync(string userId, IList<string> interests);
-    Task UpdateInterestsForUserAsync(ICollection<UsersInterestsDto> usersInterests);
-    Task DeleteInterestsForUserAsync(ICollection<UsersInterestsDto> usersInterests);
+    Task UpdateInterestsForUserAsync(string userId, IList<string> interests);
+
 }

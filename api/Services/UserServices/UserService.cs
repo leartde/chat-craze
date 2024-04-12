@@ -111,7 +111,8 @@ namespace api.Services.UserServices
 
         public async Task<bool> ValidateUser(AuthenticateUserDto authenticateUserDto)
         {
-            _user = await _userManager.FindByNameAsync(authenticateUserDto.UserName);
+            if (authenticateUserDto.UserName != null)
+                _user = await _userManager.FindByNameAsync(authenticateUserDto.UserName);
             var result = (_user != null && await _userManager
                 .CheckPasswordAsync(_user, authenticateUserDto.Password));
             if (!result)

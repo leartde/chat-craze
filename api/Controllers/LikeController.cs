@@ -5,7 +5,7 @@ using Microsoft.AspNetCore.Mvc;
 namespace api.Controllers;
 
 [ApiController]
-[Route("/api/likes")]
+[Route("/api/posts/{postId}/likes")]
 public class LikeController : ControllerBase
 {
     private readonly IServiceManager _service;
@@ -15,14 +15,14 @@ public class LikeController : ControllerBase
         _service = service;
     }
 
-    [HttpGet("user/{userId}")]
+    [HttpGet("/api/users/{userId}/likes")]
     public async Task<IActionResult> GetLikesForUser(string userId)
     {
         var likes = await _service.LikeService.GetLikesForUserAsync(userId);
         return Ok(likes);
     }
 
-    [HttpGet("post/{postId}")]
+    [HttpGet]
     public async Task<IActionResult> GetLikesForPost(int postId)
     {
         var likes = await _service.LikeService.GetLikesForPostAsync(postId);
@@ -30,16 +30,16 @@ public class LikeController : ControllerBase
     }
 
     [HttpPost]
-    public async Task<IActionResult> CreateLike(AddLikeDto addLikeDto)
+    public async Task<IActionResult> CreateLike(int postId, string userId)
     {
-        await _service.LikeService.AddLikeAsync(addLikeDto);
+        await _service.LikeService.AddLikeAsync(postId, userId);
         return Ok($"Like successfully added.");
     }
 
     [HttpDelete]
-    public async Task<IActionResult> DeleteLike(DeleteLikeDto deleteLikeDto)
+    public async Task<IActionResult> DeleteLike(int postId, string userId)
     {
-        await _service.LikeService.RemoveLikeAsync(deleteLikeDto);
+        await _service.LikeService.RemoveLikeAsync(postId, userId);
         return Ok("Like successfully removed.");
     }
 }

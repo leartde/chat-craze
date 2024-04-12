@@ -37,7 +37,7 @@ namespace api.Extensions
         public static void ConfigureMySql(this IServiceCollection services, IConfiguration configuration)
         {
             services.AddDbContext<ApplicationDbContext>(options =>
-               options.UseMySQL(configuration.GetConnectionString("DefaultConnection"))
+               options.UseMySQL(configuration.GetConnectionString("DefaultConnection")!)
             );
         }
         public static void ConfigureLoggerService(this IServiceCollection services)
@@ -71,17 +71,18 @@ namespace api.Extensions
             })
                 .AddJwtBearer(options =>
                 {
-                    options.TokenValidationParameters = new TokenValidationParameters
-                    {
-                        ValidateIssuer = true,
-                        ValidateAudience = true,
-                        ValidateLifetime = true,
-                        ValidateIssuerSigningKey = true,
+                    if (secretKey != null)
+                        options.TokenValidationParameters = new TokenValidationParameters
+                        {
+                            ValidateIssuer = true,
+                            ValidateAudience = true,
+                            ValidateLifetime = true,
+                            ValidateIssuerSigningKey = true,
 
-                        ValidIssuer = jwtConfiguration.ValidIssuer,
-                        ValidAudience = jwtConfiguration.ValidAudience,
-                        IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(secretKey))
-                    };
+                            ValidIssuer = jwtConfiguration.ValidIssuer,
+                            ValidAudience = jwtConfiguration.ValidAudience,
+                            IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(secretKey))
+                        };
                 });
         }
     }

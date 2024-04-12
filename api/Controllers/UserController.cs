@@ -5,7 +5,7 @@ using Microsoft.AspNetCore.Mvc;
 namespace api.Controllers
 {
     [ApiController]
-    [Route("api/authentication")]
+    [Route("api/users")]
     public class UserController : ControllerBase
     {
         private readonly IServiceManager _service;
@@ -14,7 +14,7 @@ namespace api.Controllers
             _service = serviceManager;
         }
 
-        [HttpPost("register")]
+        [HttpPost("authentication/register")]
         public async Task<IActionResult> RegisterUser([FromBody] AddUserDto addUserDto)
         {
             var result = await _service.UserService.RegisterUser(addUserDto);
@@ -28,7 +28,7 @@ namespace api.Controllers
             }
             return StatusCode(201);
         }
-        [HttpPost("login")]
+        [HttpPost("authentication/login")]
         public async Task<IActionResult> Authenticate([FromBody] AuthenticateUserDto user)
         {
             if (!await _service.UserService.ValidateUser(user)) return Unauthorized();
@@ -36,21 +36,21 @@ namespace api.Controllers
             return Ok(tokenDto);
         }
         
-        [HttpPost("refresh")]       
+        [HttpPost("authentication/refresh")]       
         public async Task<IActionResult> Refresh([FromBody] TokenDto tokenDto)
         {
             var tokenDtoToReturn = await _service.UserService.RefreshToken(tokenDto);
             return Ok(tokenDtoToReturn);
         }
 
-        [HttpGet("users")]
+        [HttpGet]
         public async Task<IActionResult> GetAllUsers()
         {
            var users = await _service.UserService.GetAllUsersAsync();
             return Ok(users);
         }
 
-        [HttpGet("users/{id}")]
+        [HttpGet("{id}")]
         public async Task<IActionResult> GetUser(string id)
         {
             var user = await _service.UserService.GetUserAsync(id);

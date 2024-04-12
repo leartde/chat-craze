@@ -25,38 +25,42 @@ public class FriendshipService : IFriendshipService
         return _mapper.Map<IEnumerable<FriendshipDto>>(friendships);
     }
 
-    public async Task CreateFriendshipAsync(AddFriendshipDto addFriendshipDto)
+    public async  Task CreateFriendshipAsync(string friendOneId, string friendTwoId)
     {
-        await ValidateFriendshipAsync(addFriendshipDto);
-        var friendship = _mapper.Map<Friendship>(addFriendshipDto);
+        await ValidateFriendshipAsync(friendOneId, friendTwoId);
+        var friendship = new Friendship
+        {
+            FriendOneId = friendOneId,
+            FriendTwoId = friendTwoId
+        };
         _repository.Friendship.CreateFriendship(friendship);
-        await SendFriendshipAcceptedNotificationAsync(addFriendshipDto.FriendTwoId, addFriendshipDto.FriendOneId);
+        await SendFriendshipAcceptedNotificationAsync(friendOneId, friendTwoId);
         await _repository.SaveAsync();
     }
 
-    public async Task DeleteFriendshipAsync(DeleteFriendshipDto deleteFriendshipDto)
+    public async Task DeleteFriendshipAsync(string friendOneId, string friendTwoId)
     {
-        var friendships = await _repository.Friendship.GetFriendshipsForUserAsync(deleteFriendshipDto.FriendOne);
+        var friendships = await _repository.Friendship.GetFriendshipsForUserAsync(friendOneId);
         var friendshipToDelete = friendships
-            .FirstOrDefault(f => (f.FriendOneId.Equals(deleteFriendshipDto.FriendOne) &&
-                                   f.FriendTwoId.Equals(deleteFriendshipDto.FriendTwo)) ||
-                                  (f.FriendOneId.Equals(deleteFriendshipDto.FriendTwo)
-                                   && f.FriendTwoId.Equals(deleteFriendshipDto.FriendOne))
+            .FirstOrDefault(f => (f.FriendOneId.Equals(friendOneId) &&
+                                   f.FriendTwoId.Equals(friendTwoId)) ||
+                                  (f.FriendOneId.Equals(friendTwoId)
+                                   && f.FriendTwoId.Equals(friendOneId))
                 );
         if (friendshipToDelete is null) throw new NotFoundException("Friendship not found");
             _repository.Friendship.DeleteFriendship(friendshipToDelete);
             await _repository.SaveAsync();
     }
 
-    private async Task ValidateFriendshipAsync(AddFriendshipDto addFriendshipDto)
+    private async Task ValidateFriendshipAsync(string friendOneId, string friendTwoId)
     {
-        await CheckIfUserExistsAsync(addFriendshipDto.FriendOneId);
-        await CheckIfUserExistsAsync(addFriendshipDto.FriendTwoId);
-        await CheckIfFriendshipExistsAsync(addFriendshipDto.FriendOneId, addFriendshipDto.FriendTwoId);
-        if (addFriendshipDto.FriendOneId.Equals(addFriendshipDto.FriendTwoId))
+        await CheckIfUserExistsAsync(friendOneId);
+        await CheckIfUserExistsAsync(friendTwoId);
+        await CheckIfFriendshipExistsAsync(friendOneId, friendTwoId);
+        if (friendOneId.Equals(friendTwoId))
             throw new BadRequestException("Ids can't be equal.");
-        var invitations = await _repository.Invite.GetInvitationsForSenderAsync(addFriendshipDto.FriendOneId);
-        if (invitations == null || !invitations.Any(i => i.ReceiverId.Equals(addFriendshipDto.FriendTwoId)))
+        var invitations = await _repository.Invite.GetInvitationsForSenderAsync(friendOneId);
+        if (invitations == null || !invitations.Any(i => i.ReceiverId.Equals(friendTwoId)))
             throw new BadRequestException("No invite for this friendship exists.");
         //TODO - logic for checking if currentUser is friendOne 
     }

@@ -14,6 +14,8 @@ namespace api.Repositories
         private readonly Lazy<IFriendshipRepository> _friendshipRepository;
         private readonly Lazy<IBookmarkRepository> _bookmarkRepository;
         private readonly Lazy<IUsersInterestsRepository> _usersInterestsRepository;
+        private readonly Lazy<ICommentRepository> _commentRepository;
+        private readonly Lazy<IReplyRepository> _replyRepository;
         public RepositoryManager(ApplicationDbContext context)
         {
             _context = context;
@@ -27,6 +29,8 @@ namespace api.Repositories
             _invitationRepository = new Lazy<IInvitationRepository>(() => new InvitationRepository(context));
             _usersInterestsRepository =
                 new Lazy<IUsersInterestsRepository>(() => new UsersInterestsRepository(context));
+            _commentRepository = new Lazy<ICommentRepository>(() => new CommentRepository(context));
+            _replyRepository = new Lazy<IReplyRepository>(() => new ReplyRepository(context));
         }
         public IPostRepository Post => _postRepository.Value;
         public IUserRepository User => _userRepository.Value;
@@ -36,6 +40,9 @@ namespace api.Repositories
         public IFriendshipRepository Friendship => _friendshipRepository.Value;
         public IBookmarkRepository Bookmark => _bookmarkRepository.Value;
         public IUsersInterestsRepository UsersInterests => _usersInterestsRepository.Value;
+
+        public ICommentRepository Comment => _commentRepository.Value;
+        public IReplyRepository Reply => _replyRepository.Value;
 
         public async Task SaveAsync()
         { 

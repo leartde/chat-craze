@@ -1,4 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations.Schema;
+﻿using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace api.Models
 {
@@ -9,10 +10,12 @@ namespace api.Models
         public string ReceiverId { get; set; }
         public AppUser? Receiver { get; set; }
         [ForeignKey(nameof(Sender))]
-        public string SenderId { get; set; }
+        public string? SenderId { get; set; }
         public AppUser? Sender { get; set; }
+        [Required]
+        [MaxLength(80,ErrorMessage = "Max length reached.")]
         public string? Content { get; set; }
         public DateTime CreatedAt { get; set; } = DateTime.Now;
-        public bool? isRead { get; set; } = false;
+        public bool? IsRead { get; set; } = false;
     }
 }

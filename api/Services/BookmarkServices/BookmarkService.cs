@@ -22,17 +22,21 @@ public class BookmarkService : IBookmarkService
         return _mapper.Map<IEnumerable<BookmarkDto>>(bookmarks);
     }
 
-    public async Task CreateBookmarkAsync(AddBookmarkDto addBookmarkDto)
+    public async Task CreateBookmarkAsync(string userId, int postId)
     {
-        var bookmark = _mapper.Map<Bookmark>(addBookmarkDto);
+        var bookmark = new Bookmark
+        {
+            UserId = userId,
+            PostId = postId
+        };
         _repository.Bookmark.CreateBookmark(bookmark);
         await _repository.SaveAsync();
     }
 
-    public async Task DeleteBookmarkAsync(DeleteBookmarkDto deleteBookmarkDto)
+    public async Task DeleteBookmarkAsync(string userId, int postId)
     {
-        var bookmarks = await _repository.Bookmark.GetBookmarksForUserAsync(deleteBookmarkDto.UserId);
-        var bookmarkToDelete = bookmarks.FirstOrDefault(b => b.PostId.Equals(deleteBookmarkDto.PostId));
+        var bookmarks = await _repository.Bookmark.GetBookmarksForUserAsync(userId);
+        var bookmarkToDelete = bookmarks.FirstOrDefault(b => b.PostId.Equals(postId));
         if (bookmarkToDelete is null) throw new NotFoundException("Bookmark not found.");
             _repository.Bookmark.DeleteBookmark(bookmarkToDelete);
             await _repository.SaveAsync();

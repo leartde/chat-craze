@@ -6,7 +6,7 @@ namespace api.Models
     {
         public int Id { get; set; }
         [ForeignKey(nameof(User))]
-        public string UserId { get; set; }
+        public string? UserId { get; set; }
         public AppUser? User { get; set; }
         [ForeignKey(nameof(Post))]
         public int PostId { get; set; } 

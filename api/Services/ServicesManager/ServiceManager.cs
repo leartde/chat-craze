@@ -1,11 +1,13 @@
 ﻿using api.Contracts;
 using api.Models;
 using api.Services.BookmarkServices;
+using api.Services.CommentServices;
 using api.Services.FriendshipServices;
 using api.Services.InvitationServices;
 using api.Services.LikeServices;
 using api.Services.NotificationServices;
 using api.Services.PostServices;
+using api.Services.ReplyServices;
 using api.Services.UserServices;
 using api.Services.UsersInterestsServices;
 using AutoMapper;
@@ -23,6 +25,8 @@ namespace api.Services.ServicesManager
         private readonly Lazy<ILikeService> _likeService;
         private readonly Lazy<IBookmarkService> _bookmarkService;
         private readonly Lazy<IUsersInterestsService> _usersInterestsService;
+        private readonly Lazy<ICommentService> _commentService;
+        private readonly Lazy<IReplyService> _replyService;
 
         public ServiceManager(IRepositoryManager repositoryManager, ILoggerManager logger,
             IMapper mapper, UserManager<AppUser> userManager, IConfiguration configuration
@@ -39,6 +43,8 @@ namespace api.Services.ServicesManager
             _bookmarkService = new Lazy<IBookmarkService>(() => new BookmarkService(repositoryManager, mapper));
             _usersInterestsService =
                 new Lazy<IUsersInterestsService>(() => new UsersInterestsService(repositoryManager, mapper));
+            _commentService = new Lazy<ICommentService>(() => new CommentService(repositoryManager, mapper));
+            _replyService = new Lazy<IReplyService>(() => new ReplyService(repositoryManager, mapper));
         }
 
         public IPostService PostService => _postService.Value;
@@ -50,5 +56,7 @@ namespace api.Services.ServicesManager
         public ILikeService LikeService => _likeService.Value;
         public IBookmarkService BookmarkService => _bookmarkService.Value;
         public IUsersInterestsService UsersInterestsService => _usersInterestsService.Value;
+        public ICommentService CommentService => _commentService.Value;
+        public IReplyService ReplyService => _replyService.Value;
     }
 }

@@ -6,6 +6,6 @@ public class BookmarkDto
     public int PostId { get; set; }
     public string? PostTitle { get; set; }
     public string? PostImage { get; set; }
-    public string UserId { get; set; }
+    public string? UserId { get; set; }
     public DateTime CreatedAt { get; set; }
 }
