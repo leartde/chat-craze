@@ -5,6 +5,7 @@ import './index.css';
 import { RouterProvider, createBrowserRouter } from 'react-router-dom';
 import RouteTester from './Pages/RouteTester.tsx';
 import UsersDashboard from "@/Pages/Dashboard/UsersDashboard/UsersDashboard.tsx";
+import PostsDashboard from "@/Pages/Dashboard/PostsDashboard/PostsDashboard.tsx";
 
 const router = createBrowserRouter([
   {
@@ -18,6 +19,10 @@ const router = createBrowserRouter([
       {
         path:"/dashboard/users",
         element :<UsersDashboard/>
+      },
+      {
+        path:"/dashboard/posts",
+        element: <PostsDashboard/>
       }
     ]
   },
