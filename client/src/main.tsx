@@ -4,6 +4,7 @@ import App from './App.tsx'
 import './index.css';
 import { RouterProvider, createBrowserRouter } from 'react-router-dom';
 import RouteTester from './Pages/RouteTester.tsx';
+import UsersDashboard from "@/Pages/Dashboard/UsersDashboard/UsersDashboard.tsx";
 
 const router = createBrowserRouter([
   {
@@ -13,6 +14,10 @@ const router = createBrowserRouter([
       {
         path:"/route-tester",
         element: <RouteTester/>
+      },
+      {
+        path:"/dashboard/users",
+        element :<UsersDashboard/>
       }
     ]
   },
