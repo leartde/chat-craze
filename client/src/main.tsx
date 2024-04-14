@@ -6,6 +6,7 @@ import { RouterProvider, createBrowserRouter } from 'react-router-dom';
 import RouteTester from './Pages/RouteTester.tsx';
 import UsersDashboard from "@/Pages/Dashboard/UsersDashboard/UsersDashboard.tsx";
 import PostsDashboard from "@/Pages/Dashboard/PostsDashboard/PostsDashboard.tsx";
+import PostGrid from "@/Pages/Posts/PostGrid.tsx";
 
 const router = createBrowserRouter([
   {
@@ -23,6 +24,10 @@ const router = createBrowserRouter([
       {
         path:"/dashboard/posts",
         element: <PostsDashboard/>
+      },
+      {
+        path:"/",
+        element: <PostGrid/>
       }
     ]
   },
