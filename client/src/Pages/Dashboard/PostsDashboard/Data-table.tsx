@@ -29,10 +29,12 @@ import {
     DropdownMenuContent,
     DropdownMenuTrigger,
 } from "@/Components/ui/dropdown-menu"
+import {HoverCard, HoverCardContent, HoverCardTrigger} from "@/Components/ui/hover-card.tsx";
+
 
 interface DataTableProps<TData, TValue> {
     columns: ColumnDef<TData, TValue>[]
-    data: TData[]
+    data: TData[],
 }
 
 export function DataTable<TData, TValue>({
@@ -61,6 +63,11 @@ export function DataTable<TData, TValue>({
             columnVisibility,
         },
     })
+
+
+
+
+
 
     return (
         <div>
@@ -131,7 +138,16 @@ export function DataTable<TData, TValue>({
                                 >
                                     {row.getVisibleCells().map((cell) => (
                                         <TableCell key={cell.id}>
-                                            {flexRender(cell.column.columnDef.cell, cell.getContext())}
+                                            {cell.column.columnDef.id === "title" ? (
+                                                <HoverCard>
+                                                    <HoverCardTrigger>{flexRender(cell.column.columnDef.cell, cell.getContext())}</HoverCardTrigger>
+                                                    <HoverCardContent>
+                                                          <img src={cell.row.original.imageUrl} alt="post"/>
+                                                    </HoverCardContent>
+                                                </HoverCard>
+                                            ) : (
+                                                flexRender(cell.column.columnDef.cell, cell.getContext())
+                                            )}
                                         </TableCell>
                                     ))}
                                 </TableRow>

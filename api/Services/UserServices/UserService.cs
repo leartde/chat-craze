@@ -198,8 +198,16 @@ namespace api.Services.UserServices
         public async Task<UserDto> GetUserAsync(string id)
         {
             var user = await _userManager.FindByIdAsync(id);
-            if (user is null) throw new NotFoundException($"User with id {id} doesn't exist.");
+            if (user is null) throw new NotFoundException($"User with id {id} not found.");
             return _mapper.Map<UserDto>(user);
+        }
+
+        public async Task DeleteUserAsync(string id)
+        {
+            var user = await _userManager.FindByIdAsync(id);
+            if(user is null) throw new NotFoundException($"User with id {id} not found.");
+            await _userManager.DeleteAsync(user);
+            await _repository.SaveAsync();
         }
     }
 }

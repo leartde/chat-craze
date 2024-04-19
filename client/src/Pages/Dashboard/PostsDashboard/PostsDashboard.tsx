@@ -6,6 +6,7 @@ type Post = {
     title: string;
     userName: string;
     likeCount: number;
+    imageUrl : string;
 }
 const PostsDashboard = () => {
     const [posts, setPosts] = useState<Post[]>([]);
@@ -23,11 +24,11 @@ const PostsDashboard = () => {
         fetchPosts();
     }, []);
     return (
-        <div>
-            <div className="container mx-auto py-10">
-                <DataTable columns={columns} data={posts}/>
+
+            <div className="w-3/5  py-10">
+                <DataTable columns={columns} data={posts} />
             </div>
-        </div>
+
     );
 };
 

@@ -22,7 +22,7 @@ const UsersDashboard = () => {
 
     console.log("USERS LENGTH ", users.length);
     return (
-        <div className="container mx-auto py-10">
+        <div className="w-3/5  py-10">
             <DataTable columns={columns} data={users}/>
         </div>
 

@@ -12,7 +12,7 @@ namespace api.Repositories
 
         public void DeleteUser(AppUser user)
         {
-            throw new NotImplementedException();
+            Delete(user);
         }
 
         public async Task<IEnumerable<AppUser>> GetAllUsersAsync()

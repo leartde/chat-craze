@@ -9,6 +9,7 @@ import {
     DropdownMenuSeparator,
     DropdownMenuTrigger,
 } from "@/Components/ui/dropdown-menu";
+import DeletePost from "@/Services/PostServices/DeletePost.tsx";
 
 
 // This type is used to define the shape of our data.
@@ -18,15 +19,20 @@ export type Post = {
     title: string;
     userName: string;
     likeCount: number;
+    imageUrl : string;
 }
+
+
 
 export const columns: ColumnDef<Post>[] = [
     {
         accessorKey : "id",
         header: "Id",
+        id: "id",
     },
     {
         accessorKey: "title",
+        id: "title",
         header: ({ column }) => {
             return (
                 <Button
@@ -41,6 +47,7 @@ export const columns: ColumnDef<Post>[] = [
     },
     {
         accessorKey: "userName",
+        id: "userName",
         header: ({ column }) => {
             return (
                 <Button
@@ -56,6 +63,7 @@ export const columns: ColumnDef<Post>[] = [
     },
     {
         accessorKey: "likeCount",
+        id: "likeCount",
         header: ({ column }) => {
             return (
                 <Button
@@ -91,10 +99,12 @@ export const columns: ColumnDef<Post>[] = [
                         <DropdownMenuSeparator />
                         <DropdownMenuItem>View Post Details</DropdownMenuItem>
                         <DropdownMenuItem>Edit Post details</DropdownMenuItem>
+                        <DropdownMenuItem  className="text-red-600 hover:!bg-red-600 hover:!text-white" onClick={()=> DeletePost(post.id)}> Delete Post </DropdownMenuItem>
                     </DropdownMenuContent>
                 </DropdownMenu>
             )
         },
 
     },
+
 ]

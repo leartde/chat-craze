@@ -52,7 +52,7 @@ namespace api.Services.PostServices
         {
             await CheckIfPostExistsAsync(id);
             var post = await _repository.Post.GetPostAsync(id);
-            _repository.Post.DeletePost(post);
+            _repository.Post.DeletePost(post!);
             await _repository.SaveAsync();
         }
 
