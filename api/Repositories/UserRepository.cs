@@ -8,11 +8,16 @@ namespace api.Repositories
     public class UserRepository : RepositoryBase<AppUser>, IUserRepository
     { 
         public UserRepository(ApplicationDbContext _context) : base(_context) { }
-    
+
+
+        public void UpdateUser(AppUser user)
+        {
+            Update(user);
+        }
 
         public void DeleteUser(AppUser user)
         {
-            throw new NotImplementedException();
+            Delete(user);
         }
 
         public async Task<IEnumerable<AppUser>> GetAllUsersAsync()
