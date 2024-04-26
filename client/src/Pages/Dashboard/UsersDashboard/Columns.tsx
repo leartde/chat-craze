@@ -9,6 +9,14 @@ import {
     DropdownMenuSeparator,
     DropdownMenuTrigger,
 } from "@/Components/ui/dropdown-menu";
+import DeleteUser from "@/Services/UserServices/DeleteUser.tsx";
+import {Dialog, DialogFooter} from "@/Components/ui/dialog";
+import {DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger} from "@/Components/ui/dialog.tsx";
+import {Input} from "@/Components/ui/input.tsx";
+import {Label} from "@/Components/ui/label.tsx";
+import UpdateUserCard from "@/Components/Users/UpdateUserCard.tsx";
+import {ToastContainer} from "react-toastify";
+import DeleteUserCard from "@/Components/Users/DeleteUserCard.tsx";
 
 
 // This type is used to define the shape of our data.
@@ -20,12 +28,14 @@ export type User = {
 }
 
 export const columns: ColumnDef<User>[] = [
+
     {
         accessorKey : "id",
         header: "Id",
     },
     {
         accessorKey: "userName",
+        id:"userName",
         header: ({ column }) => {
             return (
                 <Button
@@ -71,8 +81,9 @@ export const columns: ColumnDef<User>[] = [
     {
         id : "actions",
         cell : ({ row }) => {
-            const user = row.original;
+            const user: User = row.original;
             return (
+
                 <DropdownMenu>
                     <DropdownMenuTrigger asChild>
                         <Button variant="ghost" className="h-8 w-8 p-0">
@@ -89,7 +100,12 @@ export const columns: ColumnDef<User>[] = [
                         </DropdownMenuItem>
                         <DropdownMenuSeparator />
                         <DropdownMenuItem>View User Details</DropdownMenuItem>
-                        <DropdownMenuItem>Edit User details</DropdownMenuItem>
+
+
+                           <UpdateUserCard id={user.id} initialUsername = {user.userName} initialEmail={user.email}/>
+
+                           <DeleteUserCard id={user.id}/>
+                        {/*<DropdownMenuItem className="text-red-600 hover:!bg-red-600 hover:!text-white" onClick={()=>DeleteUser(user.id)}>Delete User</DropdownMenuItem>*/}
                     </DropdownMenuContent>
                 </DropdownMenu>
             )

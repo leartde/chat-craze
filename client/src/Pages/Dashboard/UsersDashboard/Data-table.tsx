@@ -29,6 +29,7 @@ import {
     DropdownMenuContent,
     DropdownMenuTrigger,
 } from "@/Components/ui/dropdown-menu"
+import {HoverCard, HoverCardContent, HoverCardTrigger} from "@/Components/ui/hover-card.tsx";
 
 interface DataTableProps<TData, TValue> {
     columns: ColumnDef<TData, TValue>[]
@@ -131,7 +132,16 @@ export function DataTable<TData, TValue>({
                                 >
                                     {row.getVisibleCells().map((cell) => (
                                         <TableCell key={cell.id}>
-                                            {flexRender(cell.column.columnDef.cell, cell.getContext())}
+                                            {cell.column.columnDef.id === "userName" ? (
+                                                <HoverCard>
+                                                    <HoverCardTrigger>{flexRender(cell.column.columnDef.cell, cell.getContext())}</HoverCardTrigger>
+                                                    <HoverCardContent className="h-32 w-32 rounded-full">
+                                                        <img  className="w-full h-full rounded-full" src={cell.row.original.avatarUrl} alt="user profile"/>
+                                                    </HoverCardContent>
+                                                </HoverCard>
+                                            ) : (
+                                                flexRender(cell.column.columnDef.cell, cell.getContext())
+                                            )}
                                         </TableCell>
                                     ))}
                                 </TableRow>

@@ -9,6 +9,7 @@ namespace api.Controllers
     public class UserController : ControllerBase
     {
         private readonly IServiceManager _service;
+
         public UserController(IServiceManager serviceManager)
         {
             _service = serviceManager;
@@ -24,10 +25,13 @@ namespace api.Controllers
                 {
                     ModelState.TryAddModelError(error.Code, error.Description);
                 }
+
                 return BadRequest(ModelState);
             }
+
             return Ok("User successfully registered");
         }
+
         [HttpPost("authentication/login")]
         public async Task<IActionResult> Authenticate([FromBody] AuthenticateUserDto user)
         {
@@ -35,8 +39,8 @@ namespace api.Controllers
             var tokenDto = await _service.UserService.CreateToken(populateExp: true);
             return Ok(tokenDto);
         }
-        
-        [HttpPost("authentication/refresh")]       
+
+        [HttpPost("authentication/refresh")]
         public async Task<IActionResult> Refresh([FromBody] TokenDto tokenDto)
         {
             var tokenDtoToReturn = await _service.UserService.RefreshToken(tokenDto);
@@ -46,7 +50,7 @@ namespace api.Controllers
         [HttpGet]
         public async Task<IActionResult> GetAllUsers()
         {
-           var users = await _service.UserService.GetAllUsersAsync();
+            var users = await _service.UserService.GetAllUsersAsync();
             return Ok(users);
         }
 
@@ -57,6 +61,15 @@ namespace api.Controllers
             return Ok(user);
         }
 
+        [HttpPut("{id}")]
+        public async Task<IActionResult> UpdateUser(string id, UpdateUserDto updateUserDto)
+        {
+            await _service.UserService.UpdateUserAsync(id, updateUserDto);
+            return Ok(
+                $"User with id {id} successfully updated with new details: {updateUserDto.UserName}\n{updateUserDto.Email}");
+        }
+
+
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteUser(string id)
         {
@@ -65,3 +78,4 @@ namespace api.Controllers
         }
     }
 }
+

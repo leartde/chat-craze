@@ -209,5 +209,26 @@ namespace api.Services.UserServices
             await _userManager.DeleteAsync(user);
             await _repository.SaveAsync();
         }
+
+        public async Task UpdateUserAsync(string id, UpdateUserDto updateUserDto)
+        {
+            var user = await _userManager.FindByIdAsync(id);
+            if (user is null) throw new NotFoundException($"User with id {id} not found.");
+            await ValidateUserEdit(updateUserDto);
+            _mapper.Map(updateUserDto,user);
+            await _userManager.UpdateAsync(user);
+            await _repository.SaveAsync();
+            
+        }
+
+        private async Task ValidateUserEdit(UpdateUserDto updateUserDto)
+        {
+            if (string.IsNullOrWhiteSpace(updateUserDto.Email)) throw new BadRequestException("User email is required");
+            if (string.IsNullOrWhiteSpace(updateUserDto.UserName)) throw new BadRequestException("Username is required");
+            if(updateUserDto.UserName.Trim().Length < 4 || updateUserDto.UserName.Trim().Length > 20) throw new BadRequestException("Username must be between 6 and 20 characters.");
+
+        }
     }
+    
+    
 }

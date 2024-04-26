@@ -21,8 +21,9 @@ const PostCard2 = ({title, userName, content, imageUrl, createdAt} : PostProps) 
                 <h1 className="text-2xl font-bold font-Montserrat">{title}
                 <span className="text-xl font-semibold"> by {userName}</span>
                 </h1>
-                <p className="text-sm">{content}</p>
-                <p className="text-sm text-right mx-4">{formattedDate}</p>
+                <p className="text-sm">{content.length > 250 ? `${content.substring(0, 250)}...` : content}</p>
+
+                <p className="text-sm text-right mt-12 mx-4">{formattedDate}</p>
             </div>
 
 

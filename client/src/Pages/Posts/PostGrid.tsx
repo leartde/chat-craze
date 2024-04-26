@@ -1,5 +1,4 @@
-import React, {useEffect, useState} from 'react';
-import PostCard from "@/Components/Posts/PostCard.tsx";
+import  {useEffect, useState} from 'react';
 import PostCard2 from "@/Components/Posts/PostCard2.tsx";
 import CategorySelector from "@/Components/Posts/CategorySelector.tsx";
 interface Post{

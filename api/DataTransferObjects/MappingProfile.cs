@@ -24,6 +24,7 @@ namespace api.DataTransferObjects
             CreateMap<AddPostDto, Post>();
             
             CreateMap<AddUserDto, AppUser>();
+            CreateMap<UpdateUserDto, AppUser>();
             CreateMap<AppUser, UserDto>()
                 .ForMember(dest => dest.Role, opt => opt.MapFrom<RolesResolver>());
             

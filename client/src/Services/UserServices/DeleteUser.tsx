@@ -1,3 +1,4 @@
+import {toast} from "react-toastify";
 
 const DeleteUser = async (id: string) => {
     try {
@@ -6,11 +7,14 @@ const DeleteUser = async (id: string) => {
         });
         if(response.status == 200){
             console.log('User deleted successfully');
+            toast.success("User deleted successfully")
             return;
         }
         console.log('Error deleting user: ', response);
+        toast.error("Failed deleting user")
     } catch (e) {
         console.log('Error deleting user: ', e);
+        toast.error("Failed deleting user");
         return;
     }
 };

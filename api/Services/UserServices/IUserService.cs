@@ -12,5 +12,6 @@ namespace api.Services.UserServices
         Task<IEnumerable<UserDto>> GetAllUsersAsync();
         Task<UserDto> GetUserAsync(string id);
         Task DeleteUserAsync(string id);
+        Task UpdateUserAsync(string id, UpdateUserDto updateUserDto);
     }
 }
