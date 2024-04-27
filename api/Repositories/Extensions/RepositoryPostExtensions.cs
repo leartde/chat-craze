@@ -24,7 +24,7 @@ namespace api.Repositories.Extensions
 
             return posts.Where(p =>
                 (category == null || p.Category != null && p.Category.Equals(category)) &&
-                (username == null || p.User != null && p.User.UserName != null && p.User.UserName.Equals(username)));
+                (username == null || p.User != null && p.User.UserName != null && p.User.UserName.Contains(username)));
         }
 
 

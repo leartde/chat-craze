@@ -9,7 +9,7 @@ import {
     DropdownMenuSeparator,
     DropdownMenuTrigger,
 } from "@/Components/ui/dropdown-menu";
-import DeletePost from "@/Services/PostServices/DeletePost.tsx";
+import DeletePost from "@/Services/PostServices/DeletePost.ts";
 
 
 // This type is used to define the shape of our data.

@@ -12,6 +12,7 @@ using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Security.Cryptography;
 using System.Text;
+using Newtonsoft.Json;
 
 namespace api.Services.UserServices
 {
@@ -25,7 +26,10 @@ namespace api.Services.UserServices
         private readonly IConfiguration _configuration;
         private AppUser? _user;
         private readonly JwtConfiguration _jwtConfiguration;
-        public UserService(IRepositoryManager repository, ILoggerManager logger, IMapper mapper, UserManager<AppUser> userManager, IConfiguration configuration)
+        private readonly IHttpContextAccessor _httpContextAccessor;
+        public UserService(IRepositoryManager repository, ILoggerManager logger, IMapper mapper,
+            UserManager<AppUser> userManager, IConfiguration configuration,
+            IHttpContextAccessor contextAccessor)
         {
             _logger = logger;
             _mapper = mapper;
@@ -33,6 +37,7 @@ namespace api.Services.UserServices
             _configuration = configuration;
             _jwtConfiguration = new JwtConfiguration();
             _repository = repository;
+            _httpContextAccessor = contextAccessor;
             _configuration.Bind(_jwtConfiguration.Section, _jwtConfiguration);
         }
 
@@ -48,13 +53,21 @@ namespace api.Services.UserServices
             await _userManager.UpdateAsync(_user);
 
             var accessToken = new JwtSecurityTokenHandler().WriteToken(tokenOptions);
+
+            var tokenData = new { access_token = accessToken, refresh_token = refreshToken };
+            var tokenJson = JsonConvert.SerializeObject(tokenData);
+
+            _httpContextAccessor.HttpContext?.Response.Cookies.Append("tokens", tokenJson, new CookieOptions
+            {
+                HttpOnly = true,
+                Secure = true,
+                SameSite = SameSiteMode.None
+            });
+
             return new TokenDto(accessToken, refreshToken);
-
-
         }
 
-   
-
+        
         private JwtSecurityToken GenerateTokenOptions(SigningCredentials signingCredentials
          , List<Claim> claims)
         {
@@ -171,7 +184,7 @@ namespace api.Services.UserServices
         
         public async Task<TokenDto> RefreshToken(TokenDto tokenDto)
         {
-            var principal = GetPrincipalFromExpiredToken(tokenDto.AcccesToken);
+            var principal = GetPrincipalFromExpiredToken(tokenDto.AccessToken);
             if (principal.Identity != null)
             {
                 if (principal.Identity.Name != null)

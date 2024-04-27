@@ -9,7 +9,7 @@ import {
     DropdownMenuSeparator,
     DropdownMenuTrigger,
 } from "@/Components/ui/dropdown-menu";
-import DeleteUser from "@/Services/UserServices/DeleteUser.tsx";
+import DeleteUser from "@/Services/UserServices/DeleteUser.ts";
 import {Dialog, DialogFooter} from "@/Components/ui/dialog";
 import {DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger} from "@/Components/ui/dialog.tsx";
 import {Input} from "@/Components/ui/input.tsx";

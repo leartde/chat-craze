@@ -6,7 +6,7 @@ import {
     AlertDialogTitle,
     AlertDialogTrigger
 } from "@/Components/ui/alert-dialog.tsx";
-import DeleteUser from "@/Services/UserServices/DeleteUser.tsx";
+import DeleteUser from "@/Services/UserServices/DeleteUser.ts";
 type DeleteProps = {
     id: string
 }

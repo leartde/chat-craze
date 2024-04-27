@@ -23,7 +23,8 @@ namespace api.Extensions
                 {
                     options.AddPolicy("CorsPolicy", builder => builder.AllowAnyOrigin()
                     .AllowAnyMethod()
-                    .AllowAnyHeader());
+                    .AllowAnyHeader()
+                    .WithExposedHeaders("x-pagination"));
                 });
         }
 

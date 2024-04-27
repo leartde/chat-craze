@@ -8,11 +8,11 @@ import {
     DialogTitle,
     DialogTrigger,
     DialogClose
-} from "../ui/dialog.js";
-import { Button } from "../ui/button.js";
-import { Label } from "../ui/label.js";
-import { Input } from "../ui/input.js";
-import UpdateUser from "@/Services/UserServices/UpdateUser.tsx";
+} from "../ui/dialog.tsx";
+import { Button } from "../ui/button.tsx";
+import { Label } from "../ui/label.tsx";
+import { Input } from "../ui/input.tsx";
+import UpdateUser from "@/Services/UserServices/UpdateUser.ts";
 
 
 type UpdateUserCardProps = {

@@ -1,4 +1,4 @@
-﻿namespace api.RequestFeatures
+﻿ namespace api.RequestFeatures
 {
     public class PagedList<T> : List<T>
     {
