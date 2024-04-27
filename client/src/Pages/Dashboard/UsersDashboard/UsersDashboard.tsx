@@ -1,27 +1,18 @@
 import {useEffect, useState} from 'react';
 import {columns} from './Columns.tsx';
 import {DataTable} from "./Data-table.tsx";
-type User ={
-    id: string;
-    userName: string;
-    email: string;
-    role: string;
-    avatarUrl : string
-}
-
+import {FetchUsers, User} from "@/Services/UserServices/FetchUsers.ts";
 
 const UsersDashboard = () => {
     const [users, setUsers] = useState<User[]>([]);
     useEffect(() => {
-        const fetchUsers = async() => {
-            const response = await fetch("http://localhost:5002/api/users");
-            const data = await response.json();
-            setUsers(data);
+        const getUsers = async () => {
+            const users = await FetchUsers();
+            setUsers(users);
         };
-        fetchUsers();
+        getUsers();
     }, []);
 
-    console.log("USERS LENGTH ", users.length);
     return (
         <div className="w-3/5  py-10">
             <DataTable columns={columns} data={users}/>

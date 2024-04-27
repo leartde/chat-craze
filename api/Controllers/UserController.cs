@@ -29,7 +29,7 @@ namespace api.Controllers
                 return BadRequest(ModelState);
             }
 
-            return Ok("User successfully registered");
+            return Ok(result);
         }
 
         [HttpPost("authentication/login")]

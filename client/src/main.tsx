@@ -8,6 +8,11 @@ import UsersDashboard from "@/Pages/Dashboard/UsersDashboard/UsersDashboard.tsx"
 import PostsDashboard from "@/Pages/Dashboard/PostsDashboard/PostsDashboard.tsx";
 import PostGrid from "@/Pages/Posts/PostGrid.tsx";
 import Dashboard from "@/Pages/Dashboard/Dashboard.tsx";
+import Authentication from "@/Pages/Users/Authentication.tsx";
+import {Provider} from "react-redux";
+import {Store} from "./State/Store.ts"
+import {LoginRedirect} from "@/Redirects/LoginRedirect.ts";
+const loginPaths = ["/login", "/register", "/signin", "/signup"];
 
 const router = createBrowserRouter([
   {
@@ -22,7 +27,15 @@ const router = createBrowserRouter([
       {
         path:"/",
         element: <PostGrid/>
-      }
+      },
+      {
+        path: "/authentication",
+        element : <Authentication/>
+      },
+      ...loginPaths.map(path => ({
+        path,
+        element: <LoginRedirect />
+      }))
     ]
   },
   {
@@ -37,12 +50,18 @@ const router = createBrowserRouter([
         path: "/dashboard/posts",
         element: <PostsDashboard/>
       },
+      {
+        path:"/dashboard/users",
+       element: <UsersDashboard/>
+      }
   ]}
 
 ]);
 
 ReactDOM.createRoot(document.getElementById('root')!).render(
   <React.StrictMode>
-    <RouterProvider router={router}/>
+    <Provider store={Store}>
+      <RouterProvider router={router}/>
+    </Provider>
   </React.StrictMode>,
 )

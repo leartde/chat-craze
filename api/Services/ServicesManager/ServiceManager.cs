@@ -32,10 +32,11 @@ namespace api.Services.ServicesManager
 
         public ServiceManager(IRepositoryManager repositoryManager, ILoggerManager logger,
             IMapper mapper, UserManager<AppUser> userManager, IConfiguration configuration, IPhotoService photoService
+            ,IHttpContextAccessor httpContextAccessor
         )
         {
             _userService = new Lazy<IUserService>(() =>
-                new UserService(repositoryManager, logger, mapper, userManager, configuration));
+                new UserService(repositoryManager, logger, mapper, userManager, configuration, httpContextAccessor));
             _postService = new Lazy<IPostService>(() => new PostService(repositoryManager, mapper, photoService));
             _invitationService = new Lazy<IInvitationService>(() => new InvitationService(repositoryManager, mapper));
             _notificationService =
