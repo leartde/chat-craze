@@ -15,8 +15,9 @@ const SearchTerm = () => {
     }
 
     return (
-        <div className="w-64">
+        <div className="w-64 ">
             <Input
+                className="!bg-secondary"
                 value={searchTerm}
                 onChange={handleSearchChange}
                 placeholder="Search for a post..."

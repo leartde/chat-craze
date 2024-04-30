@@ -13,7 +13,7 @@ const Navbar = () => {
   return (
 
 
-      <nav className="bg-primary border-gray-200 dark:bg-gray-900">
+      <nav className="bg-primary text-secondary border-gray-200 dark:bg-gray-900">
           <div className="max-w-screen-xl flex flex-wrap items-center justify-between mx-auto p-4">
               <a href="https://flowbite.com/" className="flex items-center space-x-3 rtl:space-x-reverse">
                   <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTUfNks7D_3WsOf2dC-blfZgSpbGoCOL0lh3_lD8jsDKA&s" className="h-10    rounded-xl" alt="Flowbite Logo" />

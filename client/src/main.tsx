@@ -12,6 +12,7 @@ import Authentication from "@/Pages/Users/Authentication.tsx";
 import {Provider} from "react-redux";
 import {Store} from "./State/Store.ts"
 import {LoginRedirect} from "@/Redirects/LoginRedirect.ts";
+import SinglePost from "@/Pages/Posts/SinglePost.tsx";
 const loginPaths = ["/login", "/register", "/signin", "/signup"];
 
 const router = createBrowserRouter([
@@ -27,6 +28,12 @@ const router = createBrowserRouter([
       {
         path:"/",
         element: <PostGrid/>
+      },
+      {
+
+        path:"/posts/:id",
+        element: <SinglePost/>,
+        loader :({params}) => fetch(`http://localhost:5002/api/posts/${params.id}`)
       },
       {
         path: "/authentication",

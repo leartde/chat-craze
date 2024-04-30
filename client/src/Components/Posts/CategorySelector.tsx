@@ -23,19 +23,19 @@ const CategorySelector = () => {
     const selectedCategory = useSelector((state: RootState) => state.postParameters.category);
     console.log("SELECTED CATEGORY: ", selectedCategory);
     return (
-        <div className="w-64 justify-start  lg:flex flex-col  ">
+        <div className="w-64 justify-start bg-secondary  lg:flex flex-col  ">
             <DropdownMenu>
                 <DropdownMenuTrigger asChild>
                     <Button  className="font-semibold text-base" variant="outline">{selectedCategory==""?"Categories":selectedCategory}</Button>
                 </DropdownMenuTrigger>
-                <DropdownMenuContent className="w-56 !bg-primary ">
-                    <DropdownMenuCheckboxItem className="cursor-pointer hover:!bg-cyan-800" onClick={()=>handleCategoryClick("")}>
+                <DropdownMenuContent className="w-56 !bg-secondary ">
+                    <DropdownMenuCheckboxItem className="cursor-pointer hover:!bg-primary hover:!text-secondary" onClick={()=>handleCategoryClick("")}>
                         <DropdownMenuLabel>All</DropdownMenuLabel>
                     </DropdownMenuCheckboxItem>
                     {
                         categories.map((category) => (
                             <DropdownMenuCheckboxItem
-                                className="cursor-pointer hover:!bg-cyan-800"
+                                className="cursor-pointer  hover:!bg-primary hover:!text-secondary"
                                 key={category}
                                 checked={category === selectedCategory}
                                 onClick={() => handleCategoryClick(category)}

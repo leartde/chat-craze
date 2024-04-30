@@ -6,5 +6,8 @@
 
 
 body{
-    background-color: #1e2a3d;
+    /*background-color: #1e2a3d;*/
+    /*background-color: #ebf0f7;*/
+    --tw-bg-opacity: 1;
+    background-color: rgb(17 24 39 / var(--tw-bg-opacity));
 }
