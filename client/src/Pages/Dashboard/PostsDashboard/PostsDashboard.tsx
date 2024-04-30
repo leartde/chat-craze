@@ -25,7 +25,7 @@ const PostsDashboard = () => {
     }, []);
     return (
 
-            <div className="w-3/5  py-10">
+            <div className="w-3/5 border border-black px-4 py-10">
                 <DataTable columns={columns} data={posts} />
             </div>
 

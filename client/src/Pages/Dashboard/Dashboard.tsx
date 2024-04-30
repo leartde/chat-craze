@@ -9,7 +9,7 @@ const Dashboard = () => {
         <>
             <Navbar/>
             <ToastContainer/>
-            <div className=" flex  justify-evenly max-sm:flex-col">
+            <div className=" flex bg-gray-200 mb-12  justify-evenly max-sm:flex-col">
                 <DashboardSidebar/>
                 <Outlet/>
             </div>

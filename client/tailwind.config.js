@@ -26,11 +26,11 @@ module.exports = {
         ring: "hsl(var(--ring))",
         background: "hsl(var(--background))",
         foreground: "hsl(var(--foreground))",
-        primary: {
+        secondary: {
           DEFAULT: "#ebf0f7",
           foreground: "hsl(var(--primary-foreground))",
         },
-        secondary: {
+        primary: {
           DEFAULT: "#1e2a3d",
           foreground: "hsl(var(--secondary-foreground))",
         },

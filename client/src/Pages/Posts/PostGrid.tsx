@@ -8,17 +8,20 @@ import SearchTerm from "@/Components/Posts/SearchTerm.tsx";
 import {setTotalPages} from "@/State/PostParameters/PostParametersSlice.ts";
 import PostPagination from "@/Components/Posts/PostPagination.tsx";
 import PostParameters from "@/Components/Posts/PostParameters.tsx";
+import {useNavigate} from "react-router-dom";
 export type Post = {
     id: number;
     title: string;
     userName: string;
     content: string;
+    category?: string;
     likeCount: number;
     imageUrl: string;
     createdAt: Date;
 }
 const PostGrid = () => {
     const [posts, setPosts] = useState<Post[]>([]);
+    const navigate = useNavigate();
     const category : string = useSelector((state: RootState) => state.postParameters.category);
     const searchTerm : string = useSelector((state: RootState) => state.postParameters.searchTerm);
     const pageSize : number  = 9;
@@ -48,13 +51,14 @@ const PostGrid = () => {
     },[category, searchTerm, author, pageSize, pageNumber, orderBy]);
     console.log("search term ", useSelector((state: RootState) => state.postParameters.searchTerm))
     return (
-        <div className="w-full bg-gray-800">
+        <div className="w-full bg-gray-900">
             <div className="flex gap-12 h-full px-4 ml-8 mt-24">
                 <PostParameters/>
                 <div className=" relative grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 w-full  gap-y-12">
                     {
                         posts.map((post) => (
                             <PostCard2
+                                id={post.id}
                                 key={post.id}
                                 title={post.title}
                                 userName={post.userName}

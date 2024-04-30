@@ -1,7 +1,7 @@
 import React from 'react';
 import { useDispatch } from "react-redux";
 import { Input } from "@/Components/ui/input.tsx";
-import {setAuthor} from '@/State/PostParameters/PostParametersSlice';
+import {setAuthor, setPageNumber} from '@/State/PostParameters/PostParametersSlice';
 
 
 const AuthorSearch = () => {
@@ -12,11 +12,13 @@ const AuthorSearch = () => {
         const newValue = e.target.value;
         setSearchTermLocal(newValue);
         dispatch(setAuthor(newValue));
+        dispatch(setPageNumber(1));
     }
 
     return (
         <div className="w-64">
             <Input
+                className="bg-secondary"
                 value={searchTerm}
                 onChange={handleSearchChange}
                 placeholder="Search for an author..."

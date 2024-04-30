@@ -14,8 +14,8 @@ const UsersDashboard = () => {
     }, []);
 
     return (
-        <div className="w-3/5  py-10">
-            <DataTable columns={columns} data={users}/>
+        <div className="w-3/5 mt-4 border-black border  px-4 py-10">
+            <DataTable  columns={columns} data={users}/>
         </div>
 
     );
