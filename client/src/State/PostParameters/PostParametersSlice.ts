@@ -8,6 +8,7 @@ type PostParametersSlice = {
     pageSize: number;
     orderBy: string;
     totalPages : number;
+    minLikes : number;
 }
 
 const initialState: PostParametersSlice = {
@@ -17,7 +18,8 @@ const initialState: PostParametersSlice = {
     pageNumber: 1,
     pageSize: 10,
     orderBy: "createdAt",
-    totalPages: 0
+    totalPages: 0,
+    minLikes: 0
 };
 
 const PostParametersSlice = createSlice({
@@ -44,7 +46,10 @@ const PostParametersSlice = createSlice({
         },
         setTotalPages: (state, action: PayloadAction<number>) => {
             state.totalPages = action.payload;
-        }
+        },
+        setMinLikes: (state, action: PayloadAction<number>) => {
+            state.minLikes = action.payload;
+    }
     }
 })
 
@@ -55,4 +60,5 @@ export const setPageSize = PostParametersSlice.actions.setPageSize;
 export const setOrderBy = PostParametersSlice.actions.setOrderBy;
 export const setAuthor = PostParametersSlice.actions.setAuthor;
 export const setTotalPages = PostParametersSlice.actions.setTotalPages;
+export const setMinLikes = PostParametersSlice.actions.setMinLikes;
 export default PostParametersSlice.reducer;

@@ -1,14 +1,14 @@
-import React, {useEffect, useState} from 'react';
+import  {useEffect, useState} from 'react';
 import {Post} from "@/Pages/Posts/PostGrid.tsx";
 import fetchPosts from "@/Services/PostServices/FetchPosts.ts";
-import PostParameters from "@/Components/Posts/PostParameters.tsx";
 import {useNavigate} from "react-router-dom";
-type Category = {
+type SimilarPostsProps = {
     category: string;
+    id: number;
 
 }
 
-const SimilarPostsBar = ({category, id}: Category) => {
+const SimilarPostsBar = ({category, id}: SimilarPostsProps) => {
     const [posts, setPosts] = useState<Post[]>([]);
     const navigate = useNavigate();
     useEffect(() => {
@@ -26,8 +26,8 @@ const SimilarPostsBar = ({category, id}: Category) => {
         getData();
     }, [category, id]);
     return (
-        <div className="h-1/4 w-full  lg:block hidden border border-secondary p-2">
-            <div className="flex w-[420px] flex-col gap-4 text-secondary p-3">
+        <div className=" w-full  lg:block hidden border border-secondary py-2 px-2">
+            <div className="flex py-6 w-[420px] flex-col gap-4 text-secondary px-3">
                 <h1 className="text-2xl  font-semibold">Similar Posts</h1>
                 {
                     posts.map((post) => (

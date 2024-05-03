@@ -13,8 +13,11 @@ export type Comment = {
     userAvatar: string;
 }
 
-const CommentSection = (props) => {
-    const {postId} = props;
+type CommentSectionProps = {
+    postId: number;
+}
+
+const CommentSection = ({postId} : CommentSectionProps) => {
     const userClaimsState = useSelector((state: RootState) => state.userClaims);
     const [comments, setComments] = useState<Comment[]>([]);
     const [content, setContent] = useState("");
@@ -26,7 +29,7 @@ const CommentSection = (props) => {
             setComments(comments);
         }
         getComments();
-    },[index]);
+    },[index, postId]);
 
     const handleContentChange = (e) => {
         setContent(e.target.value);

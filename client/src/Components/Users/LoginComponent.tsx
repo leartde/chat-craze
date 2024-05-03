@@ -1,12 +1,14 @@
-import React, {useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import {Label} from "@/Components/ui/label.tsx";
 import {Input} from "@/Components/ui/input.tsx";
 import {Button} from "@/Components/ui/button.tsx";
-import Login from "@/Services/UserServices/Login.ts";
+import Login, {UserClaims} from "@/Services/UserServices/Login.ts";
 import {ToastContainer} from "react-toastify";
 import {useNavigate} from "react-router-dom";
 import {useDispatch} from "react-redux";
 import {setUserClaims} from "@/State/UserClaims/UserClaimsSlice.ts";
+import initializeApp from "@/Services/UserServices/InitializeApp.ts";
+import {jwtDecode} from "jwt-decode";
 
 const LoginComponent = () => {
     const [username, setUsername] = useState<string>("");
@@ -32,6 +34,13 @@ const LoginComponent = () => {
         }
 
     }
+
+    useEffect(() => {
+        const accessToken  = localStorage.getItem("accessToken");
+        const decodedToken = jwtDecode(accessToken) as UserClaims;
+        initializeApp();
+        dispatch(setUserClaims(decodedToken));
+    }, [dispatch]);
     return (
         <div >
             <ToastContainer/>
@@ -40,7 +49,7 @@ const LoginComponent = () => {
                 <Input value={username} onChange={handleUsernameChange} id="username"></Input>
                 <Label>Password</Label>
                 <Input value={password} onChange={handlePasswordChange} id="password"></Input>
-                <Button   type="submit">Login</Button>
+                <Button className="text-secondary"   type="submit">Login</Button>
                 <p className={` ${error?"":"hidden"} text-red-600 font-semibold`}>Username or password is incorrect. </p>
             </form>
         </div>
