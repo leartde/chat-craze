@@ -8,9 +8,9 @@ namespace api.Repositories.Extensions
 {
     public static class RepositoryPostExtensions
     {
-        public static IQueryable<Post> Filter(this IQueryable<Post> posts, string? category , string? username)
+        public static IQueryable<Post> Filter(this IQueryable<Post> posts, string? category , string? username, int? minLikes)
         {
-            if (string.IsNullOrWhiteSpace(category) && string.IsNullOrWhiteSpace(username))
+            if (string.IsNullOrWhiteSpace(category) && string.IsNullOrWhiteSpace(username) && minLikes == null)
             {
                 try
                 {
@@ -24,7 +24,9 @@ namespace api.Repositories.Extensions
 
             return posts.Where(p =>
                 (category == null || p.Category != null && p.Category.Equals(category)) &&
-                (username == null || p.User != null && p.User.UserName != null && p.User.UserName.Contains(username)));
+                (username == null || p.User != null && p.User.UserName != null && p.User.UserName.Contains(username))&&
+                (minLikes == null || p.Likes != null  && p.Likes.Count>= minLikes)
+                );
         }
 
 

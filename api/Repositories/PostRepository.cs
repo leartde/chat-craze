@@ -26,7 +26,7 @@ namespace api.Repositories
             var posts = await FindAll()
                 .Include(p => p.User)
                 .Include(p => p.Likes)
-                .Filter(postParameters.Category, postParameters.UserName)
+                .Filter(postParameters.Category, postParameters.UserName, postParameters.MinLikes)
                 .Search(postParameters.SearchTerm)
                 .Sort(postParameters.OrderBy)
                 .ToListAsync();
