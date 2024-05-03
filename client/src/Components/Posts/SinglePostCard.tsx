@@ -2,7 +2,6 @@ import React from 'react';
 import {Post} from "@/Pages/Posts/PostGrid.tsx";
 import {SlLike} from "react-icons/sl";
 import {FaComment} from "react-icons/fa";
-import {useNavigate} from "react-router-dom";
 
 
 const SinglePostCard = ({ title, imageUrl, content, userName, likeCount, createdAt} : Post) => {

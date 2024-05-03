@@ -8,9 +8,10 @@ type PostParameters = {
     pageNumber: number;
     searchTerm?: string;
     orderBy?: string ;
+    minLikes?: number;
 }
 
-const FetchPosts = async ({ category, author, pageSize, pageNumber, searchTerm, orderBy }: PostParameters) => {
+const FetchPosts = async ({minLikes, category, author, pageSize, pageNumber, searchTerm, orderBy }: PostParameters) => {
     try {
         let url = `http://localhost:5002/api/posts?PageSize=${pageSize}`;
         if (category && category.trim() !== "") {
@@ -27,6 +28,9 @@ const FetchPosts = async ({ category, author, pageSize, pageNumber, searchTerm, 
         }
         if(orderBy && orderBy.trim() !== ""){
             url += `&OrderBy=${encodeURIComponent(orderBy)}`;
+        }
+        if(minLikes && minLikes > 0){
+            url += `&MinLikes=${minLikes}`;
         }
 
         const response = await axios.get(url);

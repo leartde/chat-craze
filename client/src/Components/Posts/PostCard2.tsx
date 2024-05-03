@@ -25,7 +25,7 @@ const PostCard2 = ({id, title, userName, content, imageUrl, createdAt, likeCount
                 <h1 className="text-2xl font-bold text-secondary font-Montserrat">{title}
                     <span className="text-xl font-semibold"> by {userName}</span>
                 </h1>
-                <p className="text-sm text-secondary">{content.length > 250 ? `${content.substring(0, 250)}...` : content}</p>
+                <p className="text-sm text-secondary ">{content.length > 250 ? `${content.substring(0, 250)}...` : content}</p>
 
                 <div className="mt-12 flex justify-between">
                     <div className="flex flex-row gap-1 text-secondary items-center"><p className="inline text-md font-normal">{likeCount}</p> <SlLike className="text-sm"/></div>
