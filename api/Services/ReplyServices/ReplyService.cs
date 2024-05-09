@@ -38,19 +38,20 @@ public class ReplyService : IReplyService
         await EnsurePostAndCommentExistAsync(postId, commentId);
         var comment = await _repository.Comment.GetCommentForPostAsync(commentId, postId);
         var reply = _mapper.Map<Reply>(addReplyDto);
-        reply.CommentId = comment!.Id;
+        if (comment != null) reply.CommentId = comment.Id;
         _repository.Reply.CreateReply(reply);
         await _repository.SaveAsync();
     }
 
     public async Task UpdateReplyForCommentAsync(string userId, int commentId, int postId)
     {
-        throw new NotImplementedException();
+        await EnsurePostAndCommentExistAsync(postId, commentId);
+        
     }
 
     public async Task DeleteReplyForCommentAsync(string userId, int commentId, int postId)
     {
-        throw new NotImplementedException();
+        await EnsurePostAndCommentExistAsync(postId, commentId);
     }
 
     private async Task CheckIfCommentExists(int commentId, int postId)

@@ -7,15 +7,17 @@ namespace api.Models
     {
         public int Id { get; set; }
         [ForeignKey(nameof(User))]
-        public string? UserId { get; set; }
-        public AppUser? User { get; set; }
+        public string UserId { get; set; } = string.Empty;
+
+        public AppUser? User { get; set; } 
         [ForeignKey(nameof(Post))]
         public int PostId { get; set; }
-        public Post? Post { get; set; }
+
+        public Post? Post { get; set; } 
         [Required]
         [MaxLength(100,ErrorMessage = "Comment can't be more than 100 characters long.")]
-        public string? Content { get; set; }
+        public string Content { get; set; } = string.Empty;
         public DateTime CreatedAt { get; set; } = DateTime.Now;
-        public ICollection<Reply>? Replies { get; set; }
+        public ICollection<Reply> Replies { get; set; } = new List<Reply>();
     }
 }

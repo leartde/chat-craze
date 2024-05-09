@@ -48,10 +48,13 @@ namespace api.Services.UserServices
             var tokenOptions = GenerateTokenOptions(signInCredentials, claims);
             var refreshToken = GenerateRefreshToken();
 
-            _user.RefreshToken = refreshToken;
-            if (populateExp) _user.RefreshTokenExpiryTime = DateTime.Now.AddDays(7);
-            await _userManager.UpdateAsync(_user);
+            if (_user != null)
+            {
+                _user.RefreshToken = refreshToken;
+                if (populateExp) _user.RefreshTokenExpiryTime = DateTime.Now.AddDays(7);
+                await _userManager.UpdateAsync(_user);
 
+            }
             var accessToken = new JwtSecurityTokenHandler().WriteToken(tokenOptions);
 
             var tokenData = new { access_token = accessToken, refresh_token = refreshToken };
@@ -84,10 +87,11 @@ namespace api.Services.UserServices
 
         private async Task<List<Claim>> GetClaims()
         {
-            var claims = new List<Claim>
-            {
-                new Claim("username", _user.UserName),           
-              };
+            var claims = new List<Claim>();
+            if (_user?.UserName == null) return claims;
+            claims.Add(
+                new Claim("username", _user.UserName)
+            );
             if (!string.IsNullOrEmpty(_user.Email) && !string.IsNullOrEmpty(_user.Id))
             {
                 claims.Add(new Claim("email", _user.Email));
@@ -97,13 +101,14 @@ namespace api.Services.UserServices
             }
             var roles = await _userManager.GetRolesAsync(_user);
             var role = roles.FirstOrDefault();
-                claims.Add(new Claim("role", role));
+            claims.Add(new Claim("role", role!));
+
             return claims;
         }
 
         private SigningCredentials GetSigningCredentials()
         {
-            var key = Encoding.UTF8.GetBytes(Environment.GetEnvironmentVariable("SECRET"));
+            var key = Encoding.UTF8.GetBytes(Environment.GetEnvironmentVariable("SECRET")!);
             var secret = new SymmetricSecurityKey(key);
             return new SigningCredentials(secret, SecurityAlgorithms.HmacSha256);
         }
@@ -124,7 +129,6 @@ namespace api.Services.UserServices
 
         public async Task<bool> ValidateUser(AuthenticateUserDto authenticateUserDto)
         {
-            if (authenticateUserDto.UserName != null)
                 _user = await _userManager.FindByNameAsync(authenticateUserDto.UserName);
             var result = (_user != null && await _userManager
                 .CheckPasswordAsync(_user, authenticateUserDto.Password));
@@ -137,11 +141,9 @@ namespace api.Services.UserServices
         private string GenerateRefreshToken()
         {
             var randomNumber = new byte[32];
-            using (var rng = RandomNumberGenerator.Create())
-            {
-                rng.GetBytes(randomNumber);
-                return Convert.ToBase64String(randomNumber);
-            }
+            using var rng = RandomNumberGenerator.Create();
+            rng.GetBytes(randomNumber);
+            return Convert.ToBase64String(randomNumber);
         }
 
         private ClaimsPrincipal GetPrincipalFromExpiredToken(string token)
@@ -154,7 +156,7 @@ namespace api.Services.UserServices
                 ValidateIssuer = true,
                 ValidateIssuerSigningKey = true,
                 IssuerSigningKey = new SymmetricSecurityKey(
-                    Encoding.UTF8.GetBytes(Environment.GetEnvironmentVariable("SECRET"))
+                    Encoding.UTF8.GetBytes(Environment.GetEnvironmentVariable("SECRET")!)
                 ),
                 ValidateLifetime = true,
                 ValidIssuer = _jwtConfiguration.ValidIssuer,
@@ -171,6 +173,8 @@ namespace api.Services.UserServices
             {
                 throw new SecurityTokenException("Invalid token");
             }
+
+            if (principal.Identity == null) return new ClaimsPrincipal();
             var identity = new ClaimsIdentity(principal.Claims, principal.Identity.AuthenticationType, ClaimsIdentity.DefaultNameClaimType, ClaimsIdentity.DefaultRoleClaimType);
             var usernameClaim = identity.FindFirst("username");
             if (usernameClaim != null)
@@ -227,14 +231,14 @@ namespace api.Services.UserServices
         {
             var user = await _userManager.FindByIdAsync(id);
             if (user is null) throw new NotFoundException($"User with id {id} not found.");
-            await ValidateUserEdit(updateUserDto);
+             ValidateUserEdit(updateUserDto);
             _mapper.Map(updateUserDto,user);
             await _userManager.UpdateAsync(user);
             await _repository.SaveAsync();
             
         }
 
-        private async Task ValidateUserEdit(UpdateUserDto updateUserDto)
+        private void ValidateUserEdit(UpdateUserDto updateUserDto)
         {
             if (string.IsNullOrWhiteSpace(updateUserDto.Email)) throw new BadRequestException("User email is required");
             if (string.IsNullOrWhiteSpace(updateUserDto.UserName)) throw new BadRequestException("Username is required");

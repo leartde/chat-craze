@@ -63,7 +63,11 @@ public class UsersInterestsService : IUsersInterestsService
             
             foreach (var currentInterest in usersInterests)
             {
-                if (!interests.Any(i => i.Contains(currentInterest.Interest)))
+                if (interests is null)
+                {
+                    _repository.UsersInterests.DeleteUsersInterests(currentInterest);
+                }
+                else if (!interests.Any(i => i.Contains(currentInterest.Interest)))
                 {
                     _repository.UsersInterests.DeleteUsersInterests(currentInterest);
                 }
@@ -71,20 +75,22 @@ public class UsersInterestsService : IUsersInterestsService
                 {
                     interests.Remove(currentInterest.Interest);
                 }
-                else if (interests is null)
+               
+            }
+
+            if (interests != null)
+            {
+                List<UsersInterestsDto> usersInterestsDtos = interests
+                    .Select(interest => new UsersInterestsDto { UserId = userId, Interest = interest.ToLower() })
+                    .ToList();
+                var usersInterestsToCreate = _mapper.Map<List<UsersInterests>>(usersInterestsDtos);
+
+                foreach (var userInterest in usersInterestsToCreate)
                 {
-                    _repository.UsersInterests.DeleteUsersInterests(currentInterest);
+                    _repository.UsersInterests.CreateUsersInterests(userInterest);
                 }
             }
-            List<UsersInterestsDto> usersInterestsDtos = interests
-                .Select(interest => new UsersInterestsDto { UserId = userId, Interest = interest.ToLower() })
-                .ToList();
-            var usersInterestsToCreate = _mapper.Map<List<UsersInterests>>(usersInterestsDtos);
 
-            foreach (var userInterest in usersInterestsToCreate)
-            {
-                _repository.UsersInterests.CreateUsersInterests(userInterest);
-            }
             await _repository.SaveAsync();
     }
     

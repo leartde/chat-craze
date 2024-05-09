@@ -41,8 +41,8 @@ namespace api.Services.PostServices
             if(postDto.ImageFile is null) throw new BadRequestException("Image is null");
             var photoResult = await _photoService.AddPhotoAsync(postDto.ImageFile);
             if(photoResult.Error != null) throw new Exception(photoResult.Error.Message);
-            postDto.ImageUrl = photoResult.Url.ToString();
            var post = _mapper.Map<Post>(postDto);
+           post.ImageUrl = photoResult.Url.ToString();
             _repository.Post.CreatePost(post);
             await _repository.SaveAsync();
 

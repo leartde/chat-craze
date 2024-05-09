@@ -79,6 +79,7 @@ internal sealed class InvitationService : IInvitationService
     private async Task SendInviteNotificationAsync(string senderId, string receiverId)
     {
         var sender = await _repository.User.GetUserAsync(senderId);
+        if (sender is null) throw new NotFoundException($"User with id {senderId} not found");
         var addNotificationDto = new AddNotificationDto
         {
             SenderId = senderId,

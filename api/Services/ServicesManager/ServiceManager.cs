@@ -28,7 +28,6 @@ namespace api.Services.ServicesManager
         private readonly Lazy<IUsersInterestsService> _usersInterestsService;
         private readonly Lazy<ICommentService> _commentService;
         private readonly Lazy<IReplyService> _replyService;
-        private readonly Lazy<IPhotoService> _photoService;
 
         public ServiceManager(IRepositoryManager repositoryManager, ILoggerManager logger,
             IMapper mapper, UserManager<AppUser> userManager, IConfiguration configuration, IPhotoService photoService

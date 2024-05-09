@@ -7,7 +7,7 @@ namespace api.Models
     {
         public int Id { get; set; }
         [ForeignKey(nameof(Receiver))]
-        public string ReceiverId { get; set; }
+        public string ReceiverId { get; set; } = string.Empty;
         public AppUser? Receiver { get; set; }
         [ForeignKey(nameof(Sender))]
         public string? SenderId { get; set; }

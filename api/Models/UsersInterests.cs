@@ -9,9 +9,9 @@ namespace api.Models
         [Key]
         public int InterestId { get; set; }
         [ForeignKey(nameof(User))]
-        public string? UserId { get; set; }
+        public string UserId { get; set; } = string.Empty;
         public AppUser? User { get; set; }
         
-        public string? Interest { get; set; }
+        public string Interest { get; set; } = string.Empty;
     }
 }

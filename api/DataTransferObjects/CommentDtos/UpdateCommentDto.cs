@@ -1,6 +1,8 @@
-﻿namespace api.DataTransferObjects.CommentDtos;
+﻿using System.ComponentModel.DataAnnotations;
+
+namespace api.DataTransferObjects.CommentDtos;
 
 public class UpdateCommentDto
 {
-    public string? Content { get; set; }
+    [Required] public string Content { get; set; } = string.Empty;
 }

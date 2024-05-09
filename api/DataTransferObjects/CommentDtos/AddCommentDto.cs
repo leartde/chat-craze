@@ -1,8 +1,12 @@
-﻿namespace api.DataTransferObjects.CommentDtos
+﻿using System.ComponentModel.DataAnnotations;
+
+namespace api.DataTransferObjects.CommentDtos
 {
     public class AddCommentDto
     {
-        public string? UserId { get; set; }
-        public string? Content { get; set; }
+        [Required]
+        public string UserId { get; set; } = string.Empty;
+        [Required]
+        public string Content { get; set; } = string.Empty;
     }
 }

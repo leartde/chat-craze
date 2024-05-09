@@ -93,6 +93,7 @@ public class FriendshipService : IFriendshipService
     private async Task SendFriendshipAcceptedNotificationAsync(string senderId, string receiverId)
     {
         var sender = await _repository.User.GetUserAsync(senderId);
+        if (sender is null) throw new NotFoundException("User not found");
         var addNotificationDto = new AddNotificationDto
         {
             SenderId = senderId,

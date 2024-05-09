@@ -7,13 +7,11 @@ namespace api.Models
     {
         public int Id { get; set; }
         [ForeignKey(nameof(User))]
-        public string? UserId { get;set; }
+        public string UserId { get;set; } = string.Empty;
         public AppUser? User { get; set; }
         [ForeignKey(nameof(Comment))]
         public int CommentId { get; set; }
         public Comment? Comment { get; set; }
-        [Required(ErrorMessage ="Reply content is required.")]
-        [MaxLength(60,ErrorMessage ="Reply can't be more than 60 characters long.")]
         public string? Content { get; set; }
         public DateTime CreatedAt { get; set; } = DateTime.Now;
     }
