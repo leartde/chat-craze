@@ -1,5 +1,6 @@
 ﻿using api.Models;
 using System.Diagnostics;
+using System.Globalization;
 using System.Linq.Expressions;
 using System.Reflection;
 using System.Text;
@@ -23,9 +24,9 @@ namespace api.Repositories.Extensions
             }
 
             return posts.Where(p =>
-                (category == null || p.Category != null && p.Category.Equals(category)) &&
+                (category == null ||  p.Category.Equals(category)) &&
                 (username == null || p.User != null && p.User.UserName != null && p.User.UserName.Contains(username))&&
-                (minLikes == null || p.Likes != null  && p.Likes.Count>= minLikes)
+                (minLikes == null ||  p.Likes.Count>= minLikes)
                 );
         }
 
@@ -35,7 +36,7 @@ namespace api.Repositories.Extensions
             if (string.IsNullOrWhiteSpace(searchTerm)) return posts;
 
             var lowerCaseTerm = searchTerm.ToLower();
-            return posts.Where(p => p.Title!.ToLower().Contains(lowerCaseTerm));
+            return posts.Where(p => p.Title.Contains(lowerCaseTerm, StringComparison.CurrentCultureIgnoreCase));
         }
 
         public static IQueryable<Post> Sort(this IQueryable<Post> posts, string orderByQueryString)
@@ -46,19 +47,11 @@ namespace api.Repositories.Extensions
             var orderParams = orderByQueryString.Trim().Split(' ');
             var propertyName = orderParams[0];
             var isDescending = orderByQueryString.EndsWith(" desc", StringComparison.OrdinalIgnoreCase);
-
-            if (propertyName.ToLower() == "username")
-            {
-                return isDescending ?
-                    posts.OrderByDescending(p => p.User.UserName)
-                    : posts.OrderBy(p => p.User.UserName);
-            }
             switch(propertyName.ToLower()){
                 case "username":
                     return isDescending ?
-                    posts.OrderByDescending(p => p.User.UserName)
-                    : posts.OrderBy(p => p.User.UserName);
-                    break;
+                    posts.OrderByDescending(p => p.User != null?p.User.UserName:p.CreatedAt.ToString(CultureInfo.InvariantCulture))
+                    : posts.OrderBy(p => p.User != null?p.User.UserName:p.CreatedAt.ToString(CultureInfo.InvariantCulture));
                 case "likecount":
                         return isDescending ?
                     posts.OrderByDescending(p => p.Likes.Count)

@@ -1,4 +1,5 @@
-﻿using api.Enumerations;
+﻿using System.ComponentModel.DataAnnotations;
+using api.Enumerations;
 using System.ComponentModel.DataAnnotations.Schema;
 
 namespace api.Models
@@ -7,10 +8,12 @@ namespace api.Models
     {
         public int Id { get; set; }
         [ForeignKey(nameof(Sender))]
-        public string? SenderId { get; set; }
-        public AppUser? Sender { get; set; }
+        public string SenderId { get; set; } = string.Empty;
+
+        [Required] public AppUser? Sender { get; set; }
+
         [ForeignKey(nameof(Receiver))]
-        public string? ReceiverId { get; set; }
+        public string ReceiverId { get; set; } = string.Empty;
 
         public DateTime CreatedAt { get; set; } = DateTime.Now;
         public AppUser? Receiver { get; set; }

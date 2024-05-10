@@ -24,24 +24,27 @@ public class UsersInterestsService : IUsersInterestsService
     
     public async Task<IList<string>> GetInterestsForUserAsync(string userId)
     {
-        await CheckIfUserExistsAsync(userId);
+        var user = await FetchUserAsync(userId);
         var usersInterests = await _repository
-            .UsersInterests.GetUsersInterestsForUserAsync(userId);
+            .UsersInterests.GetUsersInterestsForUserAsync(user.Id);
         IList<string> interestsToReturn = new List<string>();
         foreach (var interest in usersInterests)
-        {
-            if (interest.Interest != null) interestsToReturn.Add(interest.Interest);
-        }
-
+             interestsToReturn.Add(interest.Interest);
         return interestsToReturn;
     }
 
     public async Task AddInterestsForUserAsync(string userId, IList<string> interests)
     {
-        await CheckIfUserExistsAsync(userId);
+        var user = await FetchUserAsync(userId);
+        var oldInterests = await GetInterestsForUserAsync(user.Id);
+        if (interests.Any(i => oldInterests.Any(oi => string.Equals(oi, i, StringComparison.CurrentCultureIgnoreCase))))
+        {
+            throw new BadRequestException("Duplicate interest");
+        }
         ValidateInterestsInput(interests);
+        
         List<UsersInterestsDto> usersInterestsDtos = interests
-            .Select(interest => new UsersInterestsDto { UserId = userId, Interest = interest.ToLower() })
+            .Select(interest => new UsersInterestsDto { UserId = user.Id, Interest = interest.ToLower() })
             .ToList();
 
         var usersInterestsToCreate = _mapper.Map<List<UsersInterests>>(usersInterestsDtos);
@@ -56,14 +59,18 @@ public class UsersInterestsService : IUsersInterestsService
     
     public async Task UpdateInterestsForUserAsync(string userId, IList<string> interests)
     {
-        await CheckIfUserExistsAsync(userId);
+        var user =  await FetchUserAsync(userId);
         ValidateInterestsInput(interests);
        var usersInterests = await _repository.UsersInterests
-            .GetUsersInterestsForUserAsync(userId);
+            .GetUsersInterestsForUserAsync(user.Id);
             
             foreach (var currentInterest in usersInterests)
             {
-                if (!interests.Any(i => i.Contains(currentInterest.Interest)))
+                if (interests is null)
+                {
+                    _repository.UsersInterests.DeleteUsersInterests(currentInterest);
+                }
+                else if (!interests.Any(i => i.Contains(currentInterest.Interest)))
                 {
                     _repository.UsersInterests.DeleteUsersInterests(currentInterest);
                 }
@@ -71,27 +78,30 @@ public class UsersInterestsService : IUsersInterestsService
                 {
                     interests.Remove(currentInterest.Interest);
                 }
-                else if (interests is null)
+               
+            }
+
+            if (interests != null)
+            {
+                List<UsersInterestsDto> usersInterestsDtos = interests
+                    .Select(interest => new UsersInterestsDto { UserId = userId, Interest = interest.ToLower() })
+                    .ToList();
+                var usersInterestsToCreate = _mapper.Map<List<UsersInterests>>(usersInterestsDtos);
+
+                foreach (var userInterest in usersInterestsToCreate)
                 {
-                    _repository.UsersInterests.DeleteUsersInterests(currentInterest);
+                    _repository.UsersInterests.CreateUsersInterests(userInterest);
                 }
             }
-            List<UsersInterestsDto> usersInterestsDtos = interests
-                .Select(interest => new UsersInterestsDto { UserId = userId, Interest = interest.ToLower() })
-                .ToList();
-            var usersInterestsToCreate = _mapper.Map<List<UsersInterests>>(usersInterestsDtos);
 
-            foreach (var userInterest in usersInterestsToCreate)
-            {
-                _repository.UsersInterests.CreateUsersInterests(userInterest);
-            }
             await _repository.SaveAsync();
     }
     
-    private async Task CheckIfUserExistsAsync(string userId)
+    private async Task<AppUser> FetchUserAsync(string userId)
     {
         var user = await _repository.User.GetUserAsync(userId);
         if (user is null) throw new NotFoundException($"User with id {userId} not found.");
+        return user;
     }
 
     private void ValidateInterestsInput(IList<string> interests)

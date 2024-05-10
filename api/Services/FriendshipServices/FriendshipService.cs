@@ -20,8 +20,8 @@ public class FriendshipService : IFriendshipService
 
     public async Task<IEnumerable<FriendshipDto>> GetFriendshipsForUserAsync(string userId)
     {
-        await CheckIfUserExistsAsync(userId);
-        var friendships = await _repository.Friendship.GetFriendshipsForUserAsync(userId);
+        var user = await FetchUserAsync(userId);
+        var friendships = await _repository.Friendship.GetFriendshipsForUserAsync(user.Id);
         return _mapper.Map<IEnumerable<FriendshipDto>>(friendships);
     }
 
@@ -54,9 +54,9 @@ public class FriendshipService : IFriendshipService
 
     private async Task ValidateFriendshipAsync(string friendOneId, string friendTwoId)
     {
-        await CheckIfUserExistsAsync(friendOneId);
-        await CheckIfUserExistsAsync(friendTwoId);
-        await CheckIfFriendshipExistsAsync(friendOneId, friendTwoId);
+        var friendOne = await FetchUserAsync(friendOneId);
+        var friendTwo = await FetchUserAsync(friendTwoId);
+        await CheckIfFriendshipExistsAsync(friendOne.Id, friendTwo.Id);
         if (friendOneId.Equals(friendTwoId))
             throw new BadRequestException("Ids can't be equal.");
         var invitations = await _repository.Invite.GetInvitationsForSenderAsync(friendOneId);
@@ -93,19 +93,20 @@ public class FriendshipService : IFriendshipService
     private async Task SendFriendshipAcceptedNotificationAsync(string senderId, string receiverId)
     {
         var sender = await _repository.User.GetUserAsync(senderId);
-        var addNotificationDto = new AddNotificationDto
+        if (sender is null) throw new NotFoundException("User not found");
+        var notification = new Notification
         {
             SenderId = senderId,
             ReceiverId = receiverId,
             Content = $"{sender.UserName} has accepted your friendship request!"
         };
-        var notification = _mapper.Map<Notification>(addNotificationDto);
         _repository.Notification.CreateNotification(notification);
     }
 
-    private async Task CheckIfUserExistsAsync(string userId)
+    private async Task<AppUser> FetchUserAsync(string userId)
     {
         var user = await _repository.User.GetUserAsync(userId);
         if (user is null) throw new NotFoundException($"User with id {userId} not found.");
+        return user;
     }
 }

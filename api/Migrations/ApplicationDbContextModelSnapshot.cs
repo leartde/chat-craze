@@ -47,19 +47,19 @@ namespace api.Migrations
                     b.HasData(
                         new
                         {
-                            Id = "d4e567bd-d7c6-4003-bc4b-094fa2b55718",
+                            Id = "6e5284c8-ecc4-40b4-beb1-eeace60227be",
                             Name = "Manager",
                             NormalizedName = "MANAGER"
                         },
                         new
                         {
-                            Id = "c4a195c1-ddef-432e-a614-6dd8fc026db9",
+                            Id = "20b0f83c-5e3a-484b-83a6-16c4bc8ebecf",
                             Name = "Administrator",
                             NormalizedName = "ADMINISTRATOR"
                         },
                         new
                         {
-                            Id = "d8f098fa-e632-486c-9432-bc46bacf74be",
+                            Id = "5acca846-f1ba-4f91-9ee6-aa6460474488",
                             Name = "User",
                             NormalizedName = "USER"
                         });
@@ -380,10 +380,14 @@ namespace api.Migrations
                         .HasColumnType("int");
 
                     b.Property<string>("Content")
+                        .IsRequired()
                         .HasColumnType("longtext");
 
                     b.Property<DateTime>("CreatedAt")
                         .HasColumnType("datetime(6)");
+
+                    b.Property<bool>("IsRead")
+                        .HasColumnType("tinyint(1)");
 
                     b.Property<string>("ReceiverId")
                         .IsRequired()
@@ -392,9 +396,6 @@ namespace api.Migrations
                     b.Property<string>("SenderId")
                         .IsRequired()
                         .HasColumnType("varchar(255)");
-
-                    b.Property<bool?>("isRead")
-                        .HasColumnType("tinyint(1)");
 
                     b.HasKey("Id");
 
@@ -412,24 +413,27 @@ namespace api.Migrations
                         .HasColumnType("int");
 
                     b.Property<string>("Category")
+                        .IsRequired()
                         .HasColumnType("longtext");
 
                     b.Property<string>("Content")
+                        .IsRequired()
                         .HasColumnType("longtext");
 
                     b.Property<DateTime>("CreatedAt")
                         .HasColumnType("datetime(6)");
 
                     b.Property<string>("ImageUrl")
+                        .IsRequired()
                         .HasColumnType("longtext");
 
                     b.Property<string>("Title")
+                        .IsRequired()
                         .HasColumnType("longtext");
 
                     b.Property<string>("UserId")
                         .IsRequired()
-                        .HasMaxLength(65)
-                        .HasColumnType("varchar(65)");
+                        .HasColumnType("varchar(255)");
 
                     b.HasKey("Id");
 
@@ -443,7 +447,7 @@ namespace api.Migrations
                             Id = 1,
                             Category = "Technology",
                             Content = "Welcome to my blog Welcome to my blog Welcome to my blog",
-                            CreatedAt = new DateTime(2024, 4, 4, 20, 31, 35, 655, DateTimeKind.Local).AddTicks(1822),
+                            CreatedAt = new DateTime(2024, 5, 10, 19, 9, 27, 442, DateTimeKind.Local).AddTicks(8084),
                             ImageUrl = "",
                             Title = "Welcome to my blog",
                             UserId = "f0f3cf67-9f60-4ee5-9297-e3d93a4878d8"
@@ -453,7 +457,7 @@ namespace api.Migrations
                             Id = 2,
                             Category = "Gaming",
                             Content = "Welcome to my gaming blog Welcome to my gaming blog Welcome to my blog",
-                            CreatedAt = new DateTime(2024, 4, 4, 20, 31, 35, 655, DateTimeKind.Local).AddTicks(1827),
+                            CreatedAt = new DateTime(2024, 5, 10, 19, 9, 27, 442, DateTimeKind.Local).AddTicks(8172),
                             ImageUrl = "",
                             Title = "THREAD ABOUT GAMING",
                             UserId = "f01dd69f-1133-4142-aebe-c5664da67cbd"
@@ -463,7 +467,7 @@ namespace api.Migrations
                             Id = 3,
                             Category = "Coding",
                             Content = "Hello welcome to my post",
-                            CreatedAt = new DateTime(2024, 4, 4, 20, 31, 35, 655, DateTimeKind.Local).AddTicks(1830),
+                            CreatedAt = new DateTime(2024, 5, 10, 19, 9, 27, 442, DateTimeKind.Local).AddTicks(8192),
                             ImageUrl = "",
                             Title = "Leart's post",
                             UserId = "4deff5ee-fc72-4dca-a13d-3ffeb86b7d5a"
@@ -480,9 +484,7 @@ namespace api.Migrations
                         .HasColumnType("int");
 
                     b.Property<string>("Content")
-                        .IsRequired()
-                        .HasMaxLength(60)
-                        .HasColumnType("varchar(60)");
+                        .HasColumnType("longtext");
 
                     b.Property<DateTime>("CreatedAt")
                         .HasColumnType("datetime(6)");
@@ -507,6 +509,7 @@ namespace api.Migrations
                         .HasColumnType("int");
 
                     b.Property<string>("Interest")
+                        .IsRequired()
                         .HasColumnType("longtext");
 
                     b.Property<string>("UserId")
@@ -525,12 +528,14 @@ namespace api.Migrations
                     b.HasBaseType("Microsoft.AspNetCore.Identity.IdentityUser");
 
                     b.Property<string>("AvatarUrl")
+                        .IsRequired()
                         .HasColumnType("longtext");
 
                     b.Property<DateTime>("CreatedAt")
                         .HasColumnType("datetime(6)");
 
                     b.Property<string>("RefreshToken")
+                        .IsRequired()
                         .HasColumnType("longtext");
 
                     b.Property<DateTime>("RefreshTokenExpiryTime")
@@ -543,54 +548,60 @@ namespace api.Migrations
                         {
                             Id = "f0f3cf67-9f60-4ee5-9297-e3d93a4878d8",
                             AccessFailedCount = 0,
-                            ConcurrencyStamp = "c58885b2-2d27-4026-8e25-8e7c7e9f0128",
+                            ConcurrencyStamp = "aa5583ba-48fd-4bd3-88fe-0af0b9438946",
                             Email = "user1@example.com",
                             EmailConfirmed = false,
                             LockoutEnabled = false,
                             NormalizedEmail = "USER1@EXAMPLE.COM",
                             NormalizedUserName = "USER1",
-                            PasswordHash = "AQAAAAIAAYagAAAAEN++oGUJs9FubstLdjkLWRiRSuD+vDLj4wdcKxTKJXeycqVQ+MyUt7gvgqCE2sSHOA==",
+                            PasswordHash = "AQAAAAIAAYagAAAAEHv3SelxPm8eXpL8/oLcTuZFTCqaWDme//AiKsoUMEIEXLlpx3FrO6Vz5LVxcn/GRA==",
                             PhoneNumberConfirmed = false,
-                            SecurityStamp = "d0191d58-c7be-4ed7-b7b0-b7b7287e6fca",
+                            SecurityStamp = "8dd26dc4-9c02-4220-9f96-6583601dc535",
                             TwoFactorEnabled = false,
                             UserName = "User1",
-                            CreatedAt = new DateTime(2024, 4, 4, 20, 31, 35, 655, DateTimeKind.Local).AddTicks(2091),
+                            AvatarUrl = "",
+                            CreatedAt = new DateTime(2024, 5, 10, 19, 9, 27, 442, DateTimeKind.Local).AddTicks(8602),
+                            RefreshToken = "",
                             RefreshTokenExpiryTime = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
                         new
                         {
                             Id = "f01dd69f-1133-4142-aebe-c5664da67cbd",
                             AccessFailedCount = 0,
-                            ConcurrencyStamp = "0d8ebd13-c58f-4bcb-a549-f7ab460547f5",
+                            ConcurrencyStamp = "420e4198-3be6-4579-ba95-6546bd9763a2",
                             Email = "user2@example.com",
                             EmailConfirmed = false,
                             LockoutEnabled = false,
                             NormalizedEmail = "USER2@EXAMPLE.COM",
                             NormalizedUserName = "USER2",
-                            PasswordHash = "AQAAAAIAAYagAAAAEEd203TWNUjdM8dD5ZBvTikE6B4jz8z+9WMLNiMOo8f7niVhv7I3nsdwtqzL8BvjMA==",
+                            PasswordHash = "AQAAAAIAAYagAAAAEJxYLUPjdZZjVGg5z0ZZ2G8N9JF6b8n2NHUbMoSbbx7uRFpK5iPI4GCcpyl8Wp6HYg==",
                             PhoneNumberConfirmed = false,
-                            SecurityStamp = "1a006c5f-b92f-4329-83e5-7d1e5f6770bf",
+                            SecurityStamp = "b09af056-3418-441d-9af1-dcea54942942",
                             TwoFactorEnabled = false,
                             UserName = "user2",
-                            CreatedAt = new DateTime(2024, 4, 4, 20, 31, 35, 708, DateTimeKind.Local).AddTicks(2326),
+                            AvatarUrl = "",
+                            CreatedAt = new DateTime(2024, 5, 10, 19, 9, 27, 535, DateTimeKind.Local).AddTicks(647),
+                            RefreshToken = "",
                             RefreshTokenExpiryTime = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
                         new
                         {
                             Id = "4deff5ee-fc72-4dca-a13d-3ffeb86b7d5a",
                             AccessFailedCount = 0,
-                            ConcurrencyStamp = "f26eff0d-22d8-492b-ab42-badf49dce005",
+                            ConcurrencyStamp = "c86908d6-c676-4906-9466-2ac0716b8f83",
                             Email = "leartde@gmail.com",
                             EmailConfirmed = false,
                             LockoutEnabled = false,
                             NormalizedEmail = "LEARTDE@GMAIL.COM",
                             NormalizedUserName = "LEARTDE",
-                            PasswordHash = "AQAAAAIAAYagAAAAELPef/Brb2PQVB8HA4uySwUUKGfkJXjz6kB8BeodsRvbraQqNw06baSmQDgy6sdrnw==",
+                            PasswordHash = "AQAAAAIAAYagAAAAEJZNHHHGd4QHkZKXsmXuoVrelg4MhX9eX2tF0H4U/LA1/LBqtJaIK6+sLW6DQDA7FA==",
                             PhoneNumberConfirmed = false,
-                            SecurityStamp = "a3f4f4c2-1e00-41a0-90b4-9e62aa786565",
+                            SecurityStamp = "6ca4f3fd-f6dc-423f-8767-c47c64e10ff2",
                             TwoFactorEnabled = false,
                             UserName = "leartde",
-                            CreatedAt = new DateTime(2024, 4, 4, 20, 31, 35, 758, DateTimeKind.Local).AddTicks(6167),
+                            AvatarUrl = "",
+                            CreatedAt = new DateTime(2024, 5, 10, 19, 9, 27, 652, DateTimeKind.Local).AddTicks(9758),
+                            RefreshToken = "",
                             RefreshTokenExpiryTime = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         });
                 });
@@ -774,7 +785,7 @@ namespace api.Migrations
             modelBuilder.Entity("api.Models.Reply", b =>
                 {
                     b.HasOne("api.Models.Comment", "Comment")
-                        .WithMany()
+                        .WithMany("Replies")
                         .HasForeignKey("CommentId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
@@ -799,6 +810,11 @@ namespace api.Migrations
                         .IsRequired();
 
                     b.Navigation("User");
+                });
+
+            modelBuilder.Entity("api.Models.Comment", b =>
+                {
+                    b.Navigation("Replies");
                 });
 
             modelBuilder.Entity("api.Models.Post", b =>

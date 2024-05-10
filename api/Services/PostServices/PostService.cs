@@ -31,8 +31,7 @@ namespace api.Services.PostServices
 
         public async Task<PostDto> GetPostAsync(int id)
         {
-            await CheckIfPostExistsAsync(id);
-            var post = await _repository.Post.GetPostAsync(id);
+            var post = await FetchPost(id);
             return _mapper.Map<PostDto>(post);
         }
 
@@ -41,8 +40,8 @@ namespace api.Services.PostServices
             if(postDto.ImageFile is null) throw new BadRequestException("Image is null");
             var photoResult = await _photoService.AddPhotoAsync(postDto.ImageFile);
             if(photoResult.Error != null) throw new Exception(photoResult.Error.Message);
-            postDto.ImageUrl = photoResult.Url.ToString();
            var post = _mapper.Map<Post>(postDto);
+           post.ImageUrl = photoResult.Url.ToString();
             _repository.Post.CreatePost(post);
             await _repository.SaveAsync();
 
@@ -50,16 +49,16 @@ namespace api.Services.PostServices
 
         public async Task DeletePostAsync(int id)
         {
-            await CheckIfPostExistsAsync(id);
-            var post = await _repository.Post.GetPostAsync(id);
-            _repository.Post.DeletePost(post!);
+            var post = await FetchPost(id);
+            _repository.Post.DeletePost(post);
             await _repository.SaveAsync();
         }
 
-        private async Task CheckIfPostExistsAsync(int postId)
+        private async Task<Post> FetchPost(int postId)
         {
             var post = await _repository.Post.GetPostAsync(postId);
             if (post is null) throw new NotFoundException($"Post with id {postId} not found.");
+            return post;
         }
     }
     

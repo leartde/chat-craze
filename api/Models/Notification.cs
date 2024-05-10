@@ -7,15 +7,13 @@ namespace api.Models
     {
         public int Id { get; set; }
         [ForeignKey(nameof(Receiver))]
-        public string ReceiverId { get; set; }
+        public string ReceiverId { get; set; } = string.Empty;
         public AppUser? Receiver { get; set; }
         [ForeignKey(nameof(Sender))]
-        public string? SenderId { get; set; }
+        public string SenderId { get; set; } = string.Empty;
         public AppUser? Sender { get; set; }
-        [Required]
-        [MaxLength(80,ErrorMessage = "Max length reached.")]
-        public string? Content { get; set; }
+        public string Content { get; set; } = string.Empty;
         public DateTime CreatedAt { get; set; } = DateTime.Now;
-        public bool? IsRead { get; set; } = false;
+        public bool IsRead { get; set; } = false;
     }
 }

@@ -3,11 +3,11 @@
 public class NotificationDto
 {
     public int Id { get; set; }
-    public string SenderId { get; set; }
-    public string? SenderUsername { get; set; }
-    public string? ReceiverId { get; set; }
-    public string? ReceiverUsername { get; set; }
-    public string? Content { get; set; }
+    public string SenderId { get; set; } = string.Empty;
+    public string SenderUsername { get; set; } = string.Empty;
+    public string ReceiverId { get; set; } = string.Empty;
+    public string ReceiverUsername { get; set; } = string.Empty;
+    public string Content { get; set; } = string.Empty;
     public  DateTime CreatedAt { get; set; }
     public bool IsRead { get; set; }
 }

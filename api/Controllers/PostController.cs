@@ -40,7 +40,7 @@ namespace api.Controllers
         public async Task<IActionResult> AddPost([FromForm]AddPostDto postDto)
         {
             await _service.PostService.AddPostAsync(postDto);
-            return Ok("Post successfully added");
+            return Ok(postDto);
         }
 
 

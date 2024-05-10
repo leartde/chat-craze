@@ -9,7 +9,8 @@ namespace api.Models
         public int PostId { get; set; }
         public Post? Post { get; set; }
         [ForeignKey(nameof(User))]
-        public string? UserId { get; set; }
+        public string UserId { get; set; } = string.Empty;
         public AppUser? User { get; set; }
+        public DateTime CreatedAt = DateTime.Now;
     }
 }
