@@ -24,14 +24,14 @@ namespace api.Data
   
 
 
-        public DbSet<Post> Posts { get; set; }
-        public DbSet<Comment> Comments { get; set; }
-        public DbSet<Bookmark> Bookmarks { get; set; }
-        public DbSet<Invitation> Invitations { get; set; }
-        public DbSet<Friendship> Friendships { get; set; }  
-        public DbSet<Reply> Replies { get; set; }
-        public DbSet<UsersInterests> UsersInterests { get; set; }
-        public DbSet<Like> Likes { get; set; }
-        public DbSet<Notification> Notifications { get; set; }
+        public DbSet<Post>? Posts { get; set; }
+        public DbSet<Comment>? Comments { get; set; }
+        public DbSet<Bookmark>? Bookmarks { get; set; }
+        public DbSet<Invitation>? Invitations { get; set; }
+        public DbSet<Friendship>? Friendships { get; set; }  
+        public DbSet<Reply>? Replies { get; set; }
+        public DbSet<UsersInterests>? UsersInterests { get; set; }
+        public DbSet<Like>? Likes { get; set; }
+        public DbSet<Notification>? Notifications { get; set; }
     }
 }

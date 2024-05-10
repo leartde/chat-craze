@@ -1,10 +1,8 @@
-﻿using api.Contracts;
-using api.Data;
-using api.DataTransferObjects.PostDtos;
+﻿using api.Data;
 using api.Models;
 using AutoMapper;
-using System.Linq;
 using api.DataTransferObjects.PostDtos.api.DataTransferObjects.PostDtos;
+using api.Exceptions;
 
 namespace api.DataTransferObjects.ValueResolvers
 {
@@ -19,7 +17,8 @@ namespace api.DataTransferObjects.ValueResolvers
 
         public int Resolve(Post source, PostDto destination, int destMember, ResolutionContext context)
         {
-            var postLikes = _context.Likes.Where(l => l.PostId == source.Id).Count();
+            if (_context.Likes is null) throw new BadRequestException("Error mapping dtos");
+            var postLikes = _context.Likes.Count(l => l.PostId == source.Id);
             return postLikes;
         }
 

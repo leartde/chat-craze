@@ -18,15 +18,15 @@ internal sealed class InvitationService : IInvitationService
     }
     public async Task<IEnumerable<InvitationDto>> GetInvitationsForSenderAsync(string senderId)
     {
-        await CheckIfUserExistsAsync(senderId);
-        var invitations =  await _repository.Invite.GetInvitationsForSenderAsync(senderId);
+        var sender = await FetchUserAsync(senderId);
+        var invitations =  await _repository.Invite.GetInvitationsForSenderAsync(sender.Id);
         return _mapper.Map<IEnumerable<InvitationDto>>(invitations);
     }
 
     public async Task<IEnumerable<InvitationDto>> GetInvitationsForReceiverAsync(string receiverId)
     {
-        await CheckIfUserExistsAsync(receiverId);
-        var invitations =  await _repository.Invite.GetInvitationsForReceiverAsync(receiverId);
+        var receiver = await FetchUserAsync(receiverId);
+        var invitations =  await _repository.Invite.GetInvitationsForReceiverAsync(receiver.Id);
         return _mapper.Map<IEnumerable<InvitationDto>>(invitations);
     }
 
@@ -70,30 +70,30 @@ internal sealed class InvitationService : IInvitationService
 
     private async Task ValidateInvitationAsync(string senderId, string receiverId)
     {
-        await CheckIfUserExistsAsync(senderId);
-        await CheckIfUserExistsAsync(receiverId);
+        var sender = await FetchUserAsync(senderId);
+        var receiver = await FetchUserAsync(receiverId);
         if (senderId.Equals(receiverId))
             throw new BadRequestException("SenderId and ReceiverId are equal");
-        await CheckIfInviteExistsAsync(senderId,receiverId);
+        await CheckIfInviteExistsAsync(sender.Id,receiver.Id);
     }
     private async Task SendInviteNotificationAsync(string senderId, string receiverId)
     {
-        var sender = await _repository.User.GetUserAsync(senderId);
-        if (sender is null) throw new NotFoundException($"User with id {senderId} not found");
-        var addNotificationDto = new AddNotificationDto
+        var sender = await FetchUserAsync(senderId);
+        var receiver = await FetchUserAsync(receiverId);
+        var notification = new Notification
         {
             SenderId = senderId,
-            ReceiverId = receiverId,
+            ReceiverId = receiver.Id,
             Content = $"{sender.UserName} has sent you a friendship request!"
         };
-        var notification = _mapper.Map<Notification>(addNotificationDto);
         _repository.Notification.CreateNotification(notification);
     }
     
-    private async Task CheckIfUserExistsAsync(string userId)
+    private async Task<AppUser> FetchUserAsync(string userId)
     {
         var user = await _repository.User.GetUserAsync(userId);
         if (user is null) throw new NotFoundException($"User with id {userId} not found.");
+        return user;
     }
 
     private async Task CheckIfInviteExistsAsync(string senderId, string receiverId)

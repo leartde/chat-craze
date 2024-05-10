@@ -39,7 +39,7 @@ namespace api.Extensions
         public static void ConfigureMySql(this IServiceCollection services, IConfiguration configuration)
         {
             services.AddDbContext<ApplicationDbContext>(options =>
-               options.UseMySQL(configuration.GetConnectionString("DefaultConnection")!)
+               options.UseMySQL(configuration.GetConnectionString("DefaultConnection") ?? string.Empty)
             );
         }
         public static void ConfigureLoggerService(this IServiceCollection services)

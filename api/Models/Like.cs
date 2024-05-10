@@ -11,5 +11,6 @@ namespace api.Models
         [ForeignKey(nameof(User))]
         public string UserId { get; set; } = string.Empty;
         public AppUser? User { get; set; }
+        public DateTime CreatedAt = DateTime.Now;
     }
 }

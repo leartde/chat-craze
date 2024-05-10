@@ -26,8 +26,8 @@ namespace api.Services.CommentServices
 
         public async Task UpdateCommentAsync(int id, int postId, UpdateCommentDto updateCommentDto)
         {
-            await CheckIfPostExistsAsync(postId);
-            var comment = await _repository.Comment.GetCommentForPostAsync(id, postId);
+            var post = await FetchPostAsync(postId);
+            var comment = await _repository.Comment.GetCommentForPostAsync(id, post.Id);
             if (comment is null) throw new NotFoundException("Comment not found");
             comment.Content = updateCommentDto.Content;
             _repository.Comment.UpdateComment(comment);
@@ -36,8 +36,8 @@ namespace api.Services.CommentServices
 
         public async Task DeleteCommentAsync(int id, int postId)
         {
-            await CheckIfPostExistsAsync(postId);
-            var comment = await _repository.Comment.GetCommentForPostAsync(id, postId);
+            var post = await FetchPostAsync(postId);
+            var comment = await _repository.Comment.GetCommentForPostAsync(id, post.Id);
             if (comment is null) throw new NotFoundException("Comment doesn't exist");
             _repository.Comment.DeleteComment(comment);
             await _repository.SaveAsync();
@@ -53,8 +53,8 @@ namespace api.Services.CommentServices
 
         public async Task<CommentDto> GetCommentForPostAsync(int id, int postId)
         {
-            await CheckIfPostExistsAsync(postId);
-            var comment = await _repository.Comment.GetCommentForPostAsync(id, postId);
+            var post = await FetchPostAsync(postId);
+            var comment = await _repository.Comment.GetCommentForPostAsync(id, post.Id);
             if (comment is null) throw new NotFoundException("Comment doesn't exist");
             return _mapper.Map<CommentDto>(comment);
         }
@@ -64,10 +64,11 @@ namespace api.Services.CommentServices
             throw new NotImplementedException();
         }
 
-        private async Task CheckIfPostExistsAsync(int postId)
+        private async Task<Post> FetchPostAsync(int postId)
         {
             var post = await _repository.Post.GetPostAsync(postId);
             if (post is null) throw new NotFoundException($"Post with id {postId} not found.");
+            return post;
         }
 
         
