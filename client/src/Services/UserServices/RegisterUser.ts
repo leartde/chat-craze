@@ -22,6 +22,9 @@ const RegisterUser = async({userName, email, password} : RegisterProps) : Promis
 
         const response : ApiResponse = await axios.post("http://localhost:5002/api/users/authentication/register",
             formData
+            ,{
+            withCredentials: true
+            }
             );
         console.log(response);
            return response;

@@ -19,7 +19,7 @@ const RegisterComponent = () => {
         setEmail(e.target.value);
     }
 
-    const handleSubmit = async (e: React.ChangeEvent<HTMLInputElement>) =>{
+    const handleSubmit = async (e) =>{
         e.preventDefault();
         const registered : ApiResponse   =  await RegisterUser({userName : username, email : email, password: password});
         if(registered.status === 200){

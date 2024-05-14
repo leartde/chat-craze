@@ -9,6 +9,9 @@ type PostParametersSlice = {
     orderBy: string;
     totalPages : number;
     minLikes : number;
+    hasNext : boolean;
+    hasPrevious : boolean;
+    currentPage : number;
 }
 
 const initialState: PostParametersSlice = {
@@ -19,7 +22,11 @@ const initialState: PostParametersSlice = {
     pageSize: 10,
     orderBy: "createdAt",
     totalPages: 0,
-    minLikes: 0
+    minLikes: 0,
+    hasNext: false,
+    hasPrevious: false,
+    currentPage : 1
+
 };
 
 const PostParametersSlice = createSlice({
@@ -49,7 +56,16 @@ const PostParametersSlice = createSlice({
         },
         setMinLikes: (state, action: PayloadAction<number>) => {
             state.minLikes = action.payload;
-    }
+        },
+        setHasNext: (state, action: PayloadAction<boolean>) => {
+            state.hasNext = action.payload;
+        },
+        setHasPrevious: (state, action: PayloadAction<boolean>) => {
+            state.hasPrevious = action.payload;
+        },
+        setCurrentPage: (state, action: PayloadAction<number>) => {
+            state.currentPage = action.payload;
+        }
     }
 })
 
@@ -61,4 +77,7 @@ export const setOrderBy = PostParametersSlice.actions.setOrderBy;
 export const setAuthor = PostParametersSlice.actions.setAuthor;
 export const setTotalPages = PostParametersSlice.actions.setTotalPages;
 export const setMinLikes = PostParametersSlice.actions.setMinLikes;
+export const setHasNext = PostParametersSlice.actions.setHasNext;
+export const setHasPrevious = PostParametersSlice.actions.setHasPrevious;
+export const setCurrentPage = PostParametersSlice.actions.setPageNumber;
 export default PostParametersSlice.reducer;

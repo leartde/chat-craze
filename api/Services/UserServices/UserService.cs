@@ -12,6 +12,7 @@ using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Security.Cryptography;
 using System.Text;
+using Microsoft.AspNetCore.Http.HttpResults;
 using Newtonsoft.Json;
 
 namespace api.Services.UserServices
@@ -57,10 +58,14 @@ namespace api.Services.UserServices
             }
             var accessToken = new JwtSecurityTokenHandler().WriteToken(tokenOptions);
 
-            var tokenData = new { access_token = accessToken, refresh_token = refreshToken };
-            var tokenJson = JsonConvert.SerializeObject(tokenData);
-
-            _httpContextAccessor.HttpContext?.Response.Cookies.Append("tokens", tokenJson, new CookieOptions
+            
+            _httpContextAccessor.HttpContext?.Response.Cookies.Append("accessToken", accessToken, new CookieOptions
+            {
+                HttpOnly = true,
+                Secure = true,
+                SameSite = SameSiteMode.None
+            });
+            _httpContextAccessor.HttpContext?.Response.Cookies.Append("refreshToken", refreshToken, new CookieOptions
             {
                 HttpOnly = true,
                 Secure = true,
@@ -68,6 +73,21 @@ namespace api.Services.UserServices
             });
 
             return new TokenDto(accessToken, refreshToken);
+        }
+
+        public bool DestroyTokens()
+        {
+            var context = _httpContextAccessor.HttpContext;
+            var accessToken = context?.Request.Cookies["accessToken"];
+            var refreshToken = context?.Request.Cookies["refreshToken"];
+            if (accessToken is null || refreshToken is null)
+            {
+                return false;
+            }
+            context?.Response.Cookies.Delete("accessToken");
+            context?.Response.Cookies.Delete("refreshToken");
+            return true;
+            
         }
 
         
@@ -189,19 +209,15 @@ namespace api.Services.UserServices
         public async Task<TokenDto> RefreshToken(TokenDto tokenDto)
         {
             var principal = GetPrincipalFromExpiredToken(tokenDto.AccessToken);
-            if (principal.Identity != null)
+            if (principal.Identity == null) return await CreateToken(populateExp: false);
+            if (principal.Identity.Name == null) return await CreateToken(populateExp: false);
+            var user = await _userManager.FindByNameAsync(principal.Identity.Name);
+            if (user is null || user.RefreshToken != tokenDto.RefreshToken ||
+                user.RefreshTokenExpiryTime <= DateTime.Now)
             {
-                if (principal.Identity.Name != null)
-                {
-                    var user = await _userManager.FindByNameAsync(principal.Identity.Name);
-                    if (user is null || user.RefreshToken != tokenDto.RefreshToken ||
-                        user.RefreshTokenExpiryTime <= DateTime.Now)
-                    {
-                        throw new BadRequestException("Invalid client request. The tokenDto has some invalid values");
-                    }
-                    _user = user;
-                }
+                throw new BadRequestException("Invalid client request. The tokenDto has some invalid values");
             }
+            _user = user;
 
             return await CreateToken(populateExp: false);
         }
@@ -216,6 +232,14 @@ namespace api.Services.UserServices
         {
             var user = await _userManager.FindByIdAsync(id);
             if (user is null) throw new NotFoundException($"User with id {id} not found.");
+            return _mapper.Map<UserDto>(user);
+        }
+
+        public async Task<UserDto> GetUserByUsernameAsync(string userName)
+        {
+            var user = await _userManager.FindByNameAsync(userName);
+            if (user is null) 
+                throw new NotFoundException($"User with username {userName} not found.");
             return _mapper.Map<UserDto>(user);
         }
 

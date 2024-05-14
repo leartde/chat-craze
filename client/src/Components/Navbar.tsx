@@ -1,12 +1,22 @@
-import {Link} from "react-router-dom";
-import {useSelector} from "react-redux";
+import {Link, useNavigate} from "react-router-dom";
+import {useDispatch, useSelector} from "react-redux";
 import {RootState} from "@/State/Store.ts";
+import {Button} from "@/Components/ui/button.tsx";
+import Logout from "@/Services/UserServices/Logout.ts";
+import {setUserClaims} from "@/State/UserClaims/UserClaimsSlice.ts";
+
 
 
 
 const Navbar = () => {
-
+    const navigate = useNavigate();
+    const dispatch = useDispatch();
     const userClaimsState = useSelector((state: RootState) => state.userClaims);
+    const handleLogout = async () => {
+        dispatch(setUserClaims({username: "", avatarUrl: "",email: "", id: "", role: ""}));
+        await Logout();
+        navigate("/");
+    }
 
 
 
@@ -29,6 +39,10 @@ const Navbar = () => {
                           <span className="sr-only">Open user menu</span>
                           <img className="w-8 h-8 rounded-full ml-4" src={userClaimsState.avatarUrl} alt="user photo"/>
                       </button>: <Link to="/authentication" className="font-semibold text-xl ">Login</Link>
+                  }
+
+                  {
+                        userClaimsState.username != "" && <Button onClick={()=>handleLogout()}>Logout</Button>
                   }
 
                   <div

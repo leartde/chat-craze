@@ -1,4 +1,3 @@
-import React from 'react';
 import {CATEGORIES} from "@/Constants";
 import {Button} from "@/Components/ui/button.tsx";
 import {useDispatch, useSelector} from "react-redux";
@@ -20,9 +19,7 @@ const CategorySelector = () => {
             dispatch(setPageNumber(1));
     }
 
-    const selectedCategory = useSelector((state: RootState) => state.postParameters.category);
-    console.log("SELECTED CATEGORY: ", selectedCategory);
-    return (
+    const selectedCategory = useSelector((state: RootState) => state.postParameters.category);return (
         <div className="w-64 justify-start bg-secondary  lg:flex flex-col  ">
             <DropdownMenu>
                 <DropdownMenuTrigger asChild>

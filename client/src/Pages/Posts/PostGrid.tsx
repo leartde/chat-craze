@@ -1,9 +1,9 @@
 import  {useEffect, useState} from 'react';
-import PostCard2 from "@/Components/Posts/PostCard2.tsx";
+import PostCard from "@/Components/Posts/PostCard.tsx";
 import {useDispatch, useSelector} from "react-redux";
 import {RootState} from "@/State/Store.ts";
 import fetchPosts from "@/Services/PostServices/FetchPosts.ts";
-import {setTotalPages} from "@/State/PostParameters/PostParametersSlice.ts";
+import {setCurrentPage, setHasNext, setHasPrevious, setTotalPages} from "@/State/PostParameters/PostParametersSlice.ts";
 import PostPagination from "@/Components/Posts/PostPagination.tsx";
 import PostParameters from "@/Components/Posts/PostParameters.tsx";
 export type Post = {
@@ -25,7 +25,7 @@ const PostGrid = () => {
     const author : string = useSelector((state: RootState) => state.postParameters.author);
     const orderBy : string = useSelector((state: RootState) => state.postParameters.orderBy);
     const minLikes : number = useSelector((state: RootState) => state.postParameters.minLikes);
-    console.log("Current page number: ", pageNumber);
+    const currentPage : number = useSelector((state: RootState) => state.postParameters.currentPage);
     const dispatch = useDispatch();
 
     useEffect(() => {
@@ -42,20 +42,22 @@ const PostGrid = () => {
            if(posts){
                setPosts(posts.data);
                dispatch(setTotalPages(posts.totalPages));
+               dispatch(setHasNext(posts.hasNext));
+               dispatch(setHasPrevious(posts.hasPrevious));
+               dispatch(setCurrentPage(posts.currentPage));
            }
         }
         getData();
 
-    },[category, searchTerm, author, pageSize, pageNumber, orderBy, minLikes]);
-    console.log("search term ", useSelector((state: RootState) => state.postParameters.searchTerm))
+    },[dispatch, category, searchTerm, author, pageSize, pageNumber, orderBy, minLikes, currentPage]);
     return (
         <div className="w-full bg-gray-900">
             <div className="flex gap-12 h-full px-4 ml-8 mt-24">
                 <PostParameters/>
-                <div className=" relative grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 w-full  gap-y-12">
+                <div className=" flex justify-start flex-wrap gap-8 sm:justify-center w-full  gap-y-12">
                     {
                         posts.map((post) => (
-                            <PostCard2
+                            <PostCard
                                 id={post.id}
                                 key={post.id}
                                 title={post.title}

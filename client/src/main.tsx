@@ -10,9 +10,11 @@ import PostGrid from "@/Pages/Posts/PostGrid.tsx";
 import Dashboard from "@/Pages/Dashboard/Dashboard.tsx";
 import Authentication from "@/Pages/Users/Authentication.tsx";
 import {Provider} from "react-redux";
-import {Store} from "./State/Store.ts"
+import {Store, persistedStore} from "./State/Store.ts";
+import {PersistGate} from "redux-persist/integration/react";
 import {LoginRedirect} from "@/Redirects/LoginRedirect.ts";
 import SinglePost from "@/Pages/Posts/SinglePost.tsx";
+import Profile from "@/Pages/Users/Profile.tsx";
 const loginPaths = ["/login", "/register", "/signin", "/signup"];
 
 const router = createBrowserRouter([
@@ -38,6 +40,11 @@ const router = createBrowserRouter([
       {
         path: "/authentication",
         element : <Authentication/>
+      },
+      {
+        path:"/users/:username",
+        element: <Profile/>,
+        loader: ({params}) => fetch(`http://localhost:5002/api/users/username/${params.username}`)
       },
       ...loginPaths.map(path => ({
         path,
@@ -68,7 +75,9 @@ const router = createBrowserRouter([
 ReactDOM.createRoot(document.getElementById('root')!).render(
   <React.StrictMode>
     <Provider store={Store}>
-      <RouterProvider router={router}/>
+      <PersistGate persistor={persistedStore}>
+        <RouterProvider router={router}/>
+      </PersistGate>
     </Provider>
   </React.StrictMode>,
 )

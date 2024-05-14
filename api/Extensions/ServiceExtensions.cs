@@ -21,10 +21,13 @@ namespace api.Extensions
             services.AddCors(
                 options =>
                 {
-                    options.AddPolicy("CorsPolicy", builder => builder.AllowAnyOrigin()
+                    options.AddPolicy("CorsPolicy", builder => builder
+                        .WithOrigins("http://localhost:5173")
                     .AllowAnyMethod()
                     .AllowAnyHeader()
+                    .AllowCredentials()
                     .WithExposedHeaders("x-pagination"));
+                    
                 });
         }
 

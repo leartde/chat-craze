@@ -11,7 +11,9 @@ namespace api.Services.UserServices
         Task<TokenDto> RefreshToken(TokenDto tokenDto);
         Task<IEnumerable<UserDto>> GetAllUsersAsync();
         Task<UserDto> GetUserAsync(string id);
+        Task<UserDto> GetUserByUsernameAsync(string userName);
         Task DeleteUserAsync(string id);
         Task UpdateUserAsync(string id, UpdateUserDto updateUserDto);
+        bool DestroyTokens();
     }
 }

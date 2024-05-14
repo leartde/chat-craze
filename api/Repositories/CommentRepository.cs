@@ -17,6 +17,7 @@ namespace api.Repositories
             return await FindByCondition(c => c.PostId == postId && c.Id == id)
                 .Include(c => c.User)
                 .Include(c => c.Post)
+                .OrderBy(c => c.CreatedAt)
                 .FirstOrDefaultAsync();
         }
 

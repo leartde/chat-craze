@@ -9,6 +9,7 @@
         public string Username { get; set; } = string.Empty;
         public string UserAvatar { get; set; } = string.Empty;
         public string PostTitle { get; set; } = string.Empty;
+        public DateTime CreatedAt { get; set; }
 
 
     }

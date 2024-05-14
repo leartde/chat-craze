@@ -11,6 +11,15 @@ type PostParameters = {
     minLikes?: number;
 }
 
+type Headers = {
+    TotalPages: number;
+    hasNext: boolean;
+    hasPrevious: boolean;
+    PageSize: number;
+    CurrentPage: number;
+
+}
+
 const FetchPosts = async ({minLikes, category, author, pageSize, pageNumber, searchTerm, orderBy }: PostParameters) => {
     try {
         let url = `http://localhost:5002/api/posts?PageSize=${pageSize}`;
@@ -36,17 +45,22 @@ const FetchPosts = async ({minLikes, category, author, pageSize, pageNumber, sea
         const response = await axios.get(url);
 
         if (response.status === 200) {
-            console.log("Response URL:", url);
-
-            // Parse the JSON string from the x-pagination header
-            const totalPagesHeader = response.headers['x-pagination'];
-            const parsedHeader = JSON.parse(totalPagesHeader);
+            // console.log("Response URL:", url);
+            const headers = response.headers['x-pagination'];
+            const parsedHeader : Headers = JSON.parse(headers);
             const totalPages = parsedHeader.TotalPages;
+            const hasNext = parsedHeader.hasNext;
+            const hasPrevious = parsedHeader.hasPrevious;
+            const currentPage = parsedHeader.CurrentPage;
+
             const posts: Post[] = response.data;
 
             return {
                 data: posts,
-                totalPages: totalPages
+                totalPages: totalPages,
+                hasNext: hasNext,
+                hasPrevious: hasPrevious,
+                currentPage: currentPage
             };
         } else {
             console.log("Error fetching posts: ", response.statusText);

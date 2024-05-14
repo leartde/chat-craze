@@ -1,5 +1,6 @@
 ﻿using api.DataTransferObjects.UserDtos;
 using api.Services.ServicesManager;
+using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Mvc;
 
 namespace api.Controllers
@@ -19,17 +20,14 @@ namespace api.Controllers
         public async Task<IActionResult> RegisterUser([FromBody] AddUserDto addUserDto)
         {
             var result = await _service.UserService.RegisterUser(addUserDto);
-            if (!result.Succeeded)
+            if (result.Succeeded) return Ok(result);
+            foreach (var error in result.Errors)
             {
-                foreach (var error in result.Errors)
-                {
-                    ModelState.TryAddModelError(error.Code, error.Description);
-                }
-
-                return BadRequest(ModelState);
+                ModelState.TryAddModelError(error.Code, error.Description);
             }
 
-            return Ok(result);
+            return BadRequest(ModelState);
+
         }
 
         [HttpPost("authentication/login")]
@@ -61,6 +59,13 @@ namespace api.Controllers
             return Ok(user);
         }
 
+        [HttpGet("username/{username}")]
+        public async Task<IActionResult> GetUserByUsername(string username)
+        {
+            var user = await _service.UserService.GetUserByUsernameAsync(username);
+            return Ok(user);
+        }
+
         [HttpPut("{id}")]
         public async Task<IActionResult> UpdateUser(string id, UpdateUserDto updateUserDto)
         {
@@ -75,6 +80,14 @@ namespace api.Controllers
         {
             await _service.UserService.DeleteUserAsync(id);
             return Ok("User successfully deleted");
+        }
+
+        [HttpPost("authentication/logout")]
+        public  IActionResult DeleteCookie()
+        {
+             var delete = _service.UserService.DestroyTokens();
+             if (delete) return Ok("Tokens deleted.");
+             return BadRequest("Error deleting tokens");
         }
     }
 }
